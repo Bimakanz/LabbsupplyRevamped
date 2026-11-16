@@ -86,4 +86,13 @@ Route::post('/product/{product}/review', [ReviewController::class, 'store'])->na
 Route::get('/quick-view/{product}', [ProductController::class, 'quickView'])->name('product.quick-view');
 Route::get('/search/suggest', [ShopController::class, 'suggest'])->name('search.suggest');
 
+Route::get('/storage/{path}', function (string $path) {
+    $root = realpath(storage_path('app/public'));
+    $file = realpath(storage_path('app/public/'.$path));
+
+    abort_unless($root && $file && str_starts_with($file, $root) && is_file($file), 404);
+
+    return response()->file($file);
+})->where('path', '.*')->name('storage.fallback');
+
 Route::get('/{page}', [PageController::class, 'show'])->name('page.show');
