@@ -15,10 +15,10 @@
         <div>
             <h2 class="font-display text-base font-semibold text-white">Kategori</h2>
             <ul class="mt-4 space-y-2.5 text-sm">
-                <li><a href="{{ route('shop') }}" class="transition hover:text-white">Semua Produk</a></li>
+                <li><a href="{{ route('shop') }}" class="footer-link">Semua Produk</a></li>
                 @foreach ($footerCategories as $category)
                     <li>
-                        <a href="{{ route('category.show', $category->slug) }}" class="transition hover:text-white">{{ $category->name }}</a>
+                        <a href="{{ route('category.show', $category->slug) }}" class="footer-link">{{ $category->name }}</a>
                     </li>
                 @endforeach
             </ul>
@@ -34,7 +34,7 @@
                     'disclaimer' => 'Disclaimer',
                     'dmca' => 'DMCA',
                 ] as $slug => $label)
-                    <li><a href="{{ url($slug) }}" class="transition hover:text-white">{{ $label }}</a></li>
+                    <li><a href="{{ url($slug) }}" class="footer-link">{{ $label }}</a></li>
                 @endforeach
             </ul>
         </div>

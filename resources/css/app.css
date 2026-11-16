@@ -94,13 +94,17 @@
         @apply relative inline-flex h-12 cursor-pointer items-center gap-1.5 text-[15px] font-medium;
     }
 
-    .nav-link::after {
-        content: '';
-        @apply absolute bottom-3 left-0 h-[2px] w-0 bg-white transition-[width] duration-300 ease-out;
+    .footer-link {
+        @apply relative inline-block transition-colors hover:text-white focus-visible:text-white;
     }
 
-    .nav-link:hover::after,
-    .nav-link:focus-visible::after {
+    .footer-link::after {
+        content: '';
+        @apply absolute -bottom-0.5 left-0 h-[1.5px] w-0 bg-white transition-[width] duration-300 ease-out;
+    }
+
+    .footer-link:hover::after,
+    .footer-link:focus-visible::after {
         @apply w-full;
     }
 
