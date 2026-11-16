@@ -175,11 +175,9 @@
                                 </div>
                                 <div>
                                     <label class="label" for="review_rating">Rating</label>
-                                    <select id="review_rating" name="rating" class="field">
-                                        @for ($i = 5; $i >= 1; $i--)
-                                            <option value="{{ $i }}">{{ $i }} bintang</option>
-                                        @endfor
-                                    </select>
+                                    <x-select name="rating"
+                                              :options="collect(range(5, 1))->map(fn ($i) => ['value' => $i, 'label' => $i.' bintang'])->all()"
+                                              :value="old('rating', 5)" />
                                 </div>
                                 <div>
                                     <label class="label" for="review_comment">Review</label>

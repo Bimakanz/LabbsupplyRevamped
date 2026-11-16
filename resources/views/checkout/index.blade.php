@@ -33,11 +33,13 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label class="label" for="billing_country">Country / Region <span class="text-red-500">*</span></label>
-                            <select id="billing_country" name="billing_country" class="field" required>
-                                <option value="ID" @selected(old('billing_country', 'ID') === 'ID')>Indonesia</option>
-                                <option value="SG" @selected(old('billing_country') === 'SG')>Singapore</option>
-                                <option value="MY" @selected(old('billing_country') === 'MY')>Malaysia</option>
-                            </select>
+                            <x-select name="billing_country"
+                                      :options="[
+                                          ['value' => 'ID', 'label' => 'Indonesia'],
+                                          ['value' => 'SG', 'label' => 'Singapore'],
+                                          ['value' => 'MY', 'label' => 'Malaysia'],
+                                      ]"
+                                      :value="old('billing_country', 'ID')" required />
                         </div>
                         <div class="sm:col-span-2">
                             <label class="label" for="billing_address_1">Street address <span class="text-red-500">*</span></label>

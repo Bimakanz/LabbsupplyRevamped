@@ -18,12 +18,16 @@
                     <input type="hidden" name="q" value="{{ request('q') }}">
                 @endif
                 <label for="sort" class="text-sm text-muted">Urutkan</label>
-                <select id="sort" name="sort" class="field !w-auto !py-2" onchange="this.form.submit()">
-                    <option value="name" @selected($sort === 'name')>Nama A-Z</option>
-                    <option value="price_asc" @selected($sort === 'price_asc')>Harga terendah</option>
-                    <option value="price_desc" @selected($sort === 'price_desc')>Harga tertinggi</option>
-                    <option value="newest" @selected($sort === 'newest')>Terbaru</option>
-                </select>
+                <x-select name="sort"
+                          :options="[
+                              ['value' => 'name', 'label' => 'Nama A-Z'],
+                              ['value' => 'price_asc', 'label' => 'Harga terendah'],
+                              ['value' => 'price_desc', 'label' => 'Harga tertinggi'],
+                              ['value' => 'newest', 'label' => 'Terbaru'],
+                          ]"
+                          :value="$sort"
+                          :submit="true"
+                          class="!w-[190px] !py-2" />
             </form>
         </div>
 

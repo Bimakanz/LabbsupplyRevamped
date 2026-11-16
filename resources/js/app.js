@@ -155,4 +155,55 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+document.addEventListener('alpine:init', () => {
+    Alpine.data('customSelect', (config = {}) => ({
+        open: false,
+        value: config.value ?? '',
+        options: config.options ?? [],
+        placeholder: config.placeholder ?? 'Pilih...',
+        submit: config.submit ?? false,
+
+        get selected() {
+            return this.options.find((option) => String(option.value) === String(this.value)) ?? null;
+        },
+
+        get label() {
+            return this.selected ? this.selected.label : this.placeholder;
+        },
+
+        toggle() {
+            this.open = ! this.open;
+        },
+
+        close() {
+            this.open = false;
+        },
+
+        choose(option) {
+            this.value = option.value;
+            this.open = false;
+
+            if (this.submit) {
+                this.$nextTick(() => this.$el.closest('form')?.submit());
+            }
+        },
+
+        init() {
+            this.$watch('open', (open) => {
+                if (open) {
+                    this.$nextTick(() => {
+                        this.$el.querySelector('[data-option-active]')?.scrollIntoView({ block: 'nearest' });
+                    });
+                }
+            });
+
+            document.addEventListener('click', (event) => {
+                if (this.open && ! this.$el.contains(event.target)) {
+                    this.close();
+                }
+            });
+        },
+    }));
+});
+
 Alpine.start();

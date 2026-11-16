@@ -11,7 +11,7 @@
     <div class="container-x grid items-center gap-8 py-12 lg:grid-cols-[1.05fr_1fr] lg:py-0 {{ $center ? 'lg:grid-cols-1 lg:py-20' : '' }}">
         <div class="relative z-10 py-4 lg:py-24 {{ $center ? 'mx-auto max-w-3xl text-center' : '' }}">
             <p class="font-display text-lg text-ink/80 sm:text-xl">{{ $eyebrow }}</p>
-            <h1 class="mt-3 font-display text-[30px] font-bold uppercase leading-[1.15] tracking-tight text-brand sm:text-[38px] lg:text-[42px] {{ $center ? 'mx-auto' : 'max-w-[640px]' }}">
+            <h1 class="mt-3 font-montserrat text-[30px] font-bold uppercase leading-[1.15] tracking-tight text-brand sm:text-[38px] lg:text-[42px] {{ $center ? 'mx-auto' : 'max-w-[640px]' }}">
                 {{ $heading }}
             </h1>
             <p class="mt-5 font-display text-lg text-ink/75 sm:text-xl">{{ $subheading }}</p>

@@ -99,7 +99,7 @@
     <nav class="bg-slate-brand text-white">
         <div class="container-x hidden items-center gap-8 lg:flex">
             <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                <button type="button" class="flex h-12 items-center gap-1.5 text-[15px] font-medium" @click="open = !open">
+                <button type="button" class="nav-link" @click="open = !open">
                     Produk
                     <svg class="size-3.5 transition" :class="open && 'rotate-180'" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M5 7.5 10 12l5-4.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
@@ -122,7 +122,7 @@
             </div>
 
             <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                <button type="button" class="flex h-12 items-center gap-1.5 text-[15px] font-medium" @click="open = !open">
+                <button type="button" class="nav-link" @click="open = !open">
                     Cara Order
                     <svg class="size-3.5 transition" :class="open && 'rotate-180'" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M5 7.5 10 12l5-4.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
@@ -134,7 +134,6 @@
                         ['order.track', 'Order Tracking'],
                         ['faqs', 'FAQs'],
                         ['shopping-faq', 'Shopping FAQs'],
-                        ['return-refund-policy', 'Returns & Refunds'],
                     ] as [$route, $label])
                         <a href="{{ \Illuminate\Support\Facades\Route::has($route) ? route($route) : url($route) }}"
                            class="block px-4 py-2 text-sm text-muted hover:bg-mist hover:text-brand">{{ $label }}</a>
@@ -143,7 +142,7 @@
             </div>
 
             <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                <button type="button" class="flex h-12 items-center gap-1.5 text-[15px] font-medium" @click="open = !open">
+                <button type="button" class="nav-link" @click="open = !open">
                     Tentang Kami
                     <svg class="size-3.5 transition" :class="open && 'rotate-180'" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M5 7.5 10 12l5-4.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
@@ -166,8 +165,8 @@
                 </div>
             </div>
 
-            <a href="{{ route('cart.index') }}" class="flex h-12 items-center text-[15px] font-medium">Cart</a>
-            <a href="{{ route('checkout.index') }}" class="flex h-12 items-center text-[15px] font-medium">Checkout</a>
+            <a href="{{ route('cart.index') }}" class="nav-link">Cart</a>
+            <a href="{{ route('checkout.index') }}" class="nav-link">Checkout</a>
 
             <div class="ml-auto flex h-12 items-center gap-5 text-[13px]">
                 <span class="opacity-90">{{ setting('free_shipping_text', 'Free delivery') }}</span>

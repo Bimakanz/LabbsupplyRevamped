@@ -8,7 +8,7 @@
 
     <div class="container-x py-10 lg:py-14">
         <div class="max-w-2xl">
-            <h1 class="font-display text-[28px] font-semibold tracking-tight text-ink lg:text-[34px]">Request a Quote</h1>
+            <h1 class="font-display text-[28px] font-semibold tracking-tight text-ink lg:text-[34px]">Request penawaran Harga</h1>
             <p class="mt-3 text-sm leading-7 text-muted">
                 Isi formulir di bawah untuk mendapatkan penawaran harga terbaik. Tim kami akan menghubungi Anda dalam 1&times;24 jam kerja.
             </p>
@@ -81,12 +81,9 @@
 
                     <form action="{{ route('quote.add') }}" method="post" class="mt-4 space-y-2">
                         @csrf
-                        <select name="product_id" class="field !text-xs" required>
-                            <option value="">Pilih produk...</option>
-                            @foreach ($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
-                            @endforeach
-                        </select>
+                        <x-select name="product_id" placeholder="Pilih produk..."
+                                  :options="$products->map(fn ($product) => ['value' => $product->id, 'label' => $product->name])->values()->all()"
+                                  required class="!py-2 !text-xs" />
                         <button type="submit" class="btn-outline !w-full !py-2 !text-xs">Tambahkan</button>
                     </form>
                 </div>

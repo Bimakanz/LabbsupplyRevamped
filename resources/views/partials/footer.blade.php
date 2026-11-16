@@ -10,14 +10,6 @@
             </a>
             <p class="mt-4 text-sm leading-7">{{ setting('footer_about', 'Lab Supply for Your Laboratory') }}</p>
             <p class="mt-4 text-sm leading-7">Distributor alat dan bahan laboratorium untuk kebutuhan riset, pendidikan, dan industri di seluruh Indonesia.</p>
-            <div class="mt-5 flex items-center gap-3">
-                @foreach (['instagram' => 'Instagram', 'facebook' => 'Facebook', 'youtube' => 'YouTube', 'linkedin' => 'LinkedIn'] as $key => $label)
-                    <a href="{{ setting($key, '#') }}" title="{{ $label }}" aria-label="{{ $label }}"
-                       class="grid size-9 place-items-center rounded-full border border-white/20 text-white/70 transition hover:border-white hover:text-white">
-                        <span class="text-[11px] font-semibold">{{ strtoupper(substr($label, 0, 2)) }}</span>
-                    </a>
-                @endforeach
-            </div>
         </div>
 
         <div>
@@ -37,7 +29,6 @@
             <ul class="mt-4 space-y-2.5 text-sm">
                 @foreach ([
                     'privacy-policy' => 'Privacy Policy',
-                    'return-refund-policy' => 'Returns & Refunds',
                     'shopping-faq' => 'Shopping FAQs',
                     'terms-and-conditions' => 'Terms & Conditions',
                     'disclaimer' => 'Disclaimer',
