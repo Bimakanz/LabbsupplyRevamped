@@ -42,3 +42,62 @@ Dashboard admin untuk mengelola seluruh konten website tanpa perlu akses ke kode
 - **SEO Settings** — atur meta title, meta description per halaman/produk (menggantikan fungsi plugin SEO di WordPress)
 
 > Catatan: fitur-fitur di atas menggantikan fungsi admin dashboard WordPress + WooCommerce yang selama ini dipakai, namun dibangun native di Laravel agar lebih ringan dan sesuai kebutuhan LabSupply.
+
+## Alur Kerja Git
+
+Branch `main` adalah kode utama. **Jangan push langsung ke `main`.** Setiap tugas dikerjakan di branch sendiri, lalu digabungkan lewat Pull Request (PR) yang sudah direview pembina.
+
+### Format Branch
+
+```
+nama/scope
+
+scope : home | katalog | produk | keranjang | checkout | akun | admin
+        docs | chore (untuk pekerjaan di luar menu: dokumentasi, konfigurasi, dependency)
+
+Contoh:
+budi/katalog
+sari/keranjang
+andi/docs
+```
+
+Aturan:
+
+- Huruf kecil semua, tanpa spasi.
+- `nama` memakai nama panggilan yang sudah disepakati dan konsisten.
+- Satu branch untuk satu tugas, selalu dibuat dari `main` terbaru.
+- Setelah PR di-merge, **hapus branch lalu buat ulang dari `main` terbaru** untuk tugas berikutnya, walaupun namanya sama:
+
+```bash
+git checkout main
+git pull
+git branch -d budi/katalog
+git checkout -b budi/katalog
+```
+
+### Format Commit
+
+```
+<type>(<scope>): <pesan>
+
+type  : feat | fix | docs | refactor | chore
+scope : home | katalog | produk | keranjang | checkout | akun | admin
+pesan : huruf kecil, bentuk perintah, maks. 72 karakter
+
+Contoh:
+feat(katalog): tambah filter berdasarkan kategori
+fix(keranjang): perbaiki total harga tidak update
+docs: tambah panduan setup lokal
+```
+
+Keterangan type:
+
+| Type       | Kapan dipakai                                        |
+|------------|------------------------------------------------------|
+| `feat`     | Menambah fitur baru                                  |
+| `fix`      | Memperbaiki bug                                      |
+| `docs`     | Perubahan dokumentasi (README, komentar)             |
+| `refactor` | Merapikan kode tanpa mengubah perilaku               |
+| `chore`    | Urusan teknis lain (dependency, konfigurasi)         |
+
+Scope boleh dikosongkan untuk perubahan yang tidak spesifik ke satu menu, misalnya `docs: tambah panduan setup lokal`.
