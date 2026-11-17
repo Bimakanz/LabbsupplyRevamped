@@ -15,8 +15,8 @@
 
         <p class="mt-3 font-display text-2xl font-semibold text-brand">{{ $product->formatted_price }}</p>
 
-        <p class="mt-3 line-clamp-4 text-sm leading-6 text-muted">
-            {{ \Illuminate\Support\Str::limit(strip_tags($product->short_description ?: $product->description), 220) }}
+        <p class="mt-3 text-sm leading-6 text-muted line-clamp-5">
+            {{ $product->short_description ?: \Illuminate\Support\Str::limit(strip_tags($product->description), 320) }}
         </p>
 
         <div class="mt-5 flex items-center gap-3">

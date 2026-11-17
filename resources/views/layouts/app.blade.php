@@ -43,10 +43,10 @@
     <div id="compare-dock" class="fixed inset-x-0 bottom-0 z-40 hidden border-t border-line bg-white/95 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur"></div>
 
     <div id="quick-view-modal" class="fixed inset-0 z-[75] hidden">
-        <div class="absolute inset-0 bg-black/50" data-quick-view-close></div>
-        <div class="absolute left-1/2 top-1/2 max-h-[90vh] w-[min(960px,calc(100vw-1.5rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white shadow-2xl">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-300" data-quick-view-close></div>
+        <div class="relative left-1/2 top-1/2 max-h-[90vh] w-[min(960px,calc(100vw-1.5rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl bg-white shadow-2xl transition-all duration-300">
             <button type="button" data-quick-view-close
-                    class="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-full bg-white/90 text-ink shadow hover:bg-mist"
+                    class="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-full bg-white/90 text-ink shadow hover:bg-mist transition"
                     aria-label="Tutup">
                 <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"/></svg>
             </button>

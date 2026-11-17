@@ -85,13 +85,29 @@
             return;
         }
 
+        if (event.target.closest('[data-quick-view-close]')) {
+            closeQuickView();
+            return;
+        }
+
         if (quickView) {
             event.preventDefault();
             openQuickView(quickView.getAttribute('href'));
+            return;
         }
 
-        if (event.target.closest('[data-quick-view-close]')) {
-            closeQuickView();
+        // Jika mengklik link kategori di dalam card, biarkan navigasi kategori berjalan
+        if (event.target.closest('a[href*="product-category"]')) {
+            return;
+        }
+
+        const productCard = event.target.closest('[data-product-card]');
+        if (productCard) {
+            const url = productCard.dataset.quickViewUrl || productCard.querySelector('[data-quick-view]')?.getAttribute('href');
+            if (url) {
+                event.preventDefault();
+                openQuickView(url);
+            }
         }
     });
 
