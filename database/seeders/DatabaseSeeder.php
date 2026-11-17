@@ -3,23 +3,44 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        foreach (['admin', 'staff', 'customer'] as $role) {
+            Role::findOrCreate($role, 'web');
+        }
+
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@labsupply.id'],
+            [
+                'name' => 'Administrator',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        $admin->syncRoles(['admin']);
+
+        User::updateOrCreate(
+            ['email' => 'staff@labsupply.id'],
+            [
+                'name' => 'Staff Lab Supply',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        )->syncRoles(['staff']);
+
+        $this->call([
+            CatalogSeeder::class,
+            DemoContentSeeder::class,
         ]);
     }
 }
