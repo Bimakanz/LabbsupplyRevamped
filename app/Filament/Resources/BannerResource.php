@@ -50,7 +50,8 @@ class BannerResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('subtitle')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->getStateUsing(fn (Banner $record): ?string => media_url($record->image)),
                 Tables\Columns\TextColumn::make('link')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('position')

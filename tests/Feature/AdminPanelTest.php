@@ -2,8 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\User;
-use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -38,5 +39,32 @@ class AdminPanelTest extends TestCase
         $customer->assignRole('customer');
 
         $this->actingAs($customer)->get('/admin')->assertForbidden();
+    }
+
+    public function test_product_table_renders_the_stored_image(): void
+    {
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $product = Product::create([
+            'name' => 'Burette 50ml',
+            'slug' => 'burette-50ml',
+            'price' => 250000,
+            'stock' => 5,
+        ]);
+
+        ProductImage::create([
+            'product_id' => $product->id,
+            'path' => 'products/burette-50ml.webp',
+            'alt' => $product->name,
+            'sort_order' => 0,
+        ]);
+
+        $this->actingAs($admin)
+            ->get('/admin/products')
+            ->assertOk()
+            ->assertSee('products/burette-50ml.webp', false);
     }
 }

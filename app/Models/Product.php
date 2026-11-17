@@ -103,9 +103,7 @@ class Product extends Model
         $image = $this->primary_image;
 
         if ($image) {
-            return str_starts_with($image->path, 'http')
-                ? $image->path
-                : asset('storage/'.$image->path);
+            return $image->url;
         }
 
         return asset('theme/img/logo.webp');

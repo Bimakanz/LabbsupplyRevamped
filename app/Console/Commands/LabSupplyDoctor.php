@@ -98,6 +98,14 @@ class LabSupplyDoctor extends Command
             return self::FAILURE;
         }
 
+        $imageRows = Schema::hasTable('product_images') ? ProductImage::query()->count() : 0;
+
+        if ($imageRows === 0) {
+            $this->warn('  VERDICT: produk ada tapi relasi gambar KOSONG (gambar akan tampil logo). Jalankan: php artisan labsupply:images --repair');
+
+            return self::FAILURE;
+        }
+
         $this->info('  VERDICT: katalog siap dipakai ('.$productCount.' produk).');
 
         return self::SUCCESS;

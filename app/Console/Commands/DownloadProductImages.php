@@ -10,12 +10,16 @@ use Illuminate\Support\Facades\Http;
 
 class DownloadProductImages extends Command
 {
-    protected $signature = 'labsupply:images {--force : Unduh ulang semua gambar}';
+    protected $signature = 'labsupply:images {--force : Unduh ulang semua gambar} {--repair : Perbaiki relasi gambar dari file lokal tanpa mengunduh}';
 
     protected $description = 'Unduh gambar produk dari labsupply.id dan simpan sebagai WebP';
 
     public function handle(): int
     {
+        if ($this->option('repair')) {
+            return $this->repair();
+        }
+
         $response = Http::withHeaders([
             'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/131',
         ])->timeout(60)->get('https://labsupply.id/wp-json/wc/store/v1/products?per_page=100');
@@ -72,6 +76,55 @@ class DownloadProductImages extends Command
         }
 
         $this->info('Selesai. Gambar diunduh: '.$downloaded);
+
+        return self::SUCCESS;
+    }
+
+    private function repair(): int
+    {
+        $directory = storage_path('app/public/products');
+        File::ensureDirectoryExists($directory);
+
+        $created = 0;
+        $fixed = 0;
+
+        Product::query()->with('images')->chunkById(200, function ($products) use ($directory, &$created, &$fixed): void {
+            foreach ($products as $product) {
+                $webp = 'products/'.$product->slug.'.webp';
+
+                if (! File::exists($directory.DIRECTORY_SEPARATOR.$product->slug.'.webp')) {
+                    continue;
+                }
+
+                if ($product->images->isEmpty()) {
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'path' => $webp,
+                        'alt' => $product->name,
+                        'sort_order' => 0,
+                    ]);
+
+                    $created++;
+
+                    continue;
+                }
+
+                foreach ($product->images as $image) {
+                    if (str_starts_with($image->path, 'http')) {
+                        continue;
+                    }
+
+                    if (File::exists(storage_path('app/public/'.$image->path))) {
+                        continue;
+                    }
+
+                    $image->update(['path' => $webp]);
+                    $fixed++;
+                }
+            }
+        });
+
+        $this->info('Selesai. Gambar ditambahkan: '.$created.', path diperbaiki: '.$fixed);
 
         return self::SUCCESS;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProductResource\RelationManagers;
 
+use App\Models\ProductImage;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -43,7 +44,7 @@ class ImagesRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\ImageColumn::make('path')
                     ->label('Gambar')
-                    ->disk('public')
+                    ->getStateUsing(fn (ProductImage $record): string => $record->url)
                     ->width(60)
                     ->height(60),
                 Tables\Columns\TextColumn::make('alt')

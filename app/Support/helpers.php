@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\File;
 
 if (! function_exists('setting')) {
     function setting(string $key, mixed $default = null): mixed
@@ -34,5 +35,24 @@ if (! function_exists('product_image')) {
         }
 
         return str_starts_with($path, 'http') ? $path : asset('storage/'.$path);
+    }
+}
+
+if (! function_exists('media_url')) {
+    function media_url(?string $path): ?string
+    {
+        if (blank($path)) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http')) {
+            return $path;
+        }
+
+        if (File::exists(storage_path('app/public/'.$path))) {
+            return asset('storage/'.$path);
+        }
+
+        return asset($path);
     }
 }

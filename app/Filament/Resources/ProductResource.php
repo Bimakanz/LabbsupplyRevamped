@@ -127,7 +127,7 @@ class ProductResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('images.path')
                     ->label('Gambar')
-                    ->disk('public')
+                    ->getStateUsing(fn (Product $record): ?string => $record->primary_image?->url)
                     ->circular()
                     ->width(44)
                     ->height(44),
@@ -199,6 +199,11 @@ class ProductResource extends Resource
         return [
             RelationManagers\ImagesRelationManager::class,
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['category', 'images']);
     }
 
     public static function getPages(): array
