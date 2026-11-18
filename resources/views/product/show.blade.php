@@ -31,19 +31,167 @@
         ['label' => $product->name, 'url' => null],
     ])])
 
-    <div class="container-x py-10 lg:py-14" x-data="{ qty: 1, tab: 'description', activeImage: '{{ $product->image_url }}' }">
+    <script>
+        function productShow(config) {
+            let initialTab = config.initialTab || 'description';
+            if (window.location.hash === '#reviews') {
+                initialTab = 'reviews';
+            }
+            return {
+                qty: 1,
+                tab: initialTab,
+                activeImage: config.defaultImage,
+
+                // Lightbox Focus & Zoom/Pan state
+                lightboxOpen: false,
+                lightboxImage: config.defaultImage,
+                scale: 1,
+                minScale: 1,
+                maxScale: 4.5,
+                panX: 0,
+                panY: 0,
+                isDragging: false,
+                hasDragged: false,
+                dragStartX: 0,
+                dragStartY: 0,
+                dragOriginX: 0,
+                dragOriginY: 0,
+
+                openLightbox(img) {
+                    this.lightboxImage = img || this.activeImage;
+                    this.resetZoom();
+                    this.lightboxOpen = true;
+                    document.body.classList.add('overflow-hidden');
+                },
+
+                closeLightbox() {
+                    this.lightboxOpen = false;
+                    this.resetZoom();
+                    document.body.classList.remove('overflow-hidden');
+                },
+
+                setLightboxImage(img) {
+                    this.lightboxImage = img;
+                    this.activeImage = img;
+                    this.resetZoom();
+                },
+
+                zoomIn() {
+                    this.setScale(this.scale + 0.35);
+                },
+
+                zoomOut() {
+                    this.setScale(this.scale - 0.35);
+                },
+
+                setScale(newScale) {
+                    const clamped = Math.min(this.maxScale, Math.max(this.minScale, Math.round(newScale * 10) / 10));
+                    this.scale = clamped;
+                    if (this.scale <= 1) {
+                        this.panX = 0;
+                        this.panY = 0;
+                    }
+                },
+
+                resetZoom() {
+                    this.scale = 1;
+                    this.panX = 0;
+                    this.panY = 0;
+                    this.isDragging = false;
+                    this.hasDragged = false;
+                },
+
+                toggleZoom(e) {
+                    if (this.scale > 1.2) {
+                        this.resetZoom();
+                    } else {
+                        this.scale = 2.5;
+                        this.panX = 0;
+                        this.panY = 0;
+                    }
+                },
+
+                handleWheel(e) {
+                    if (!this.lightboxOpen) return;
+                    const delta = e.deltaY < 0 ? 0.35 : -0.35;
+                    this.setScale(this.scale + delta);
+                },
+
+                startDrag(e) {
+                    if (e.button !== undefined && e.button !== 0) return;
+                    this.isDragging = true;
+                    this.hasDragged = false;
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    this.dragStartX = clientX;
+                    this.dragStartY = clientY;
+                    this.dragOriginX = this.panX;
+                    this.dragOriginY = this.panY;
+                },
+
+                onDrag(e) {
+                    if (!this.isDragging) return;
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    const dx = clientX - this.dragStartX;
+                    const dy = clientY - this.dragStartY;
+                    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+                        this.hasDragged = true;
+                    }
+                    this.panX = this.dragOriginX + dx;
+                    this.panY = this.dragOriginY + dy;
+                },
+
+                stopDrag() {
+                    this.isDragging = false;
+                    setTimeout(() => {
+                        this.hasDragged = false;
+                    }, 80);
+                },
+
+                handleBackdropClick(e) {
+                    if (this.hasDragged) return;
+                    if (e.target === e.currentTarget) {
+                        this.closeLightbox();
+                    }
+                }
+            };
+        }
+    </script>
+
+    <div class="container-x py-10 lg:py-14" x-data="productShow({
+        defaultImage: '{{ $product->image_url }}',
+        initialTab: '{{ session('success') || request('tab') === 'reviews' ? 'reviews' : 'description' }}'
+    })">
         <div class="grid gap-10 lg:grid-cols-2 lg:gap-14">
             <div>
-                <div class="overflow-hidden rounded-lg border border-line bg-[#f6f7f8]">
+                <!-- Main Product Photo Container with Hover Magnifying Glass -->
+                <div class="group relative overflow-hidden rounded-lg border border-line bg-[#f6f7f8] cursor-zoom-in"
+                     @click="openLightbox(activeImage)">
                     <img :src="activeImage" src="{{ $product->image_url }}" alt="{{ $product->name }}"
-                         class="aspect-square w-full object-contain p-6" width="800" height="800">
+                         class="aspect-square w-full object-contain p-6 transition duration-300 group-hover:scale-[1.02]" width="800" height="800">
+
+                    <!-- Magnifying Glass Button at Top-Right Corner -->
+                    <button type="button"
+                            @click.stop="openLightbox(activeImage)"
+                            class="absolute top-3.5 right-3.5 z-10 flex size-11 items-center justify-center rounded-full bg-white/95 text-ink shadow-md backdrop-blur border border-line/80 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 hover:bg-white hover:text-brand hover:border-brand"
+                            title="Perbesar & eksplorasi foto"
+                            aria-label="Perbesar Foto">
+                        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            <line x1="11" y1="8" x2="11" y2="14"/>
+                            <line x1="8" y1="11" x2="14" y2="11"/>
+                        </svg>
+                    </button>
                 </div>
 
                 @if ($product->images->count() > 1)
                     <div class="mt-4 flex gap-3">
                         @foreach ($product->images as $image)
                             <button type="button" @click="activeImage = '{{ $image->url }}'"
-                                    class="size-20 overflow-hidden rounded border border-line bg-mist transition hover:border-brand">
+                                    class="size-20 overflow-hidden rounded border transition hover:border-brand"
+                                    :class="activeImage === '{{ $image->url }}' ? 'border-brand ring-2 ring-brand/40 bg-white' : 'border-line bg-mist'">
                                 <img src="{{ $image->url }}" alt="{{ $image->alt ?? $product->name }}" class="size-full object-contain p-1">
                             </button>
                         @endforeach
@@ -188,7 +336,7 @@
                         :class="tab === 'discussion' ? 'border-brand text-brand' : 'border-transparent text-muted hover:text-ink'">
                     Diskusi Produk
                 </button>
-                <button type="button" @click="tab = 'reviews'"
+                <button type="button" @click="tab = 'reviews'" id="reviews"
                         class="border-b-2 pb-3 text-sm font-semibold transition"
                         :class="tab === 'reviews' ? 'border-brand text-brand' : 'border-transparent text-muted hover:text-ink'">
                     Reviews ({{ $product->approvedReviews->count() }})
@@ -320,7 +468,7 @@
 
                         <div class="rounded-lg border border-line bg-mist p-5">
                             <h2 class="font-display text-base font-semibold text-ink">Tulis Review</h2>
-                            <p class="mt-1 text-xs text-muted">Review Anda akan tampil setelah disetujui admin.</p>
+                            <p class="mt-1 text-xs text-muted">Bagikan ulasan dan pengalaman Anda menggunakan produk ini.</p>
                             <form action="{{ route('reviews.store', $product) }}" method="post" class="mt-4 space-y-3">
                                 @csrf
                                 <div>
@@ -381,6 +529,130 @@
                 </div>
             </section>
         @endif
+
+        <!-- Lightbox Pop-up Fokus Foto Produk (Zoom & Pan) -->
+        <div x-show="lightboxOpen"
+             x-cloak
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @keydown.escape.window="if(lightboxOpen) closeLightbox()"
+             class="fixed inset-0 z-[100] flex flex-col justify-between overflow-hidden bg-black/95 backdrop-blur-md text-white select-none"
+             role="dialog"
+             aria-modal="true"
+             aria-label="Fokus Foto Produk">
+
+            <!-- Top Header & Toolbar Controls -->
+            <div class="relative z-10 flex items-center justify-between gap-4 border-b border-white/10 bg-black/50 px-4 py-3 sm:px-6">
+                <div class="flex items-center gap-3 truncate">
+                    <span class="rounded bg-white/10 px-2 py-0.5 text-xs font-medium uppercase tracking-wider text-white/80">Fokus Foto</span>
+                    <h3 class="truncate text-sm font-semibold text-white/90 sm:text-base">{{ $product->name }}</h3>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Zoom Controls -->
+                    <div class="flex items-center rounded-lg border border-white/20 bg-white/10 p-1 backdrop-blur">
+                        <button type="button"
+                                @click="zoomOut()"
+                                :disabled="scale <= minScale"
+                                class="flex size-8 items-center justify-center rounded text-white/80 transition hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent"
+                                title="Zoom Out (-)"
+                                aria-label="Zoom Out">
+                            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                        </button>
+                        <button type="button"
+                                @click="resetZoom()"
+                                class="px-2.5 text-xs font-mono font-medium text-white/90 transition hover:text-brand"
+                                title="Klik untuk Reset Zoom (100%)">
+                            <span x-text="Math.round(scale * 100) + '%'">100%</span>
+                        </button>
+                        <button type="button"
+                                @click="zoomIn()"
+                                :disabled="scale >= maxScale"
+                                class="flex size-8 items-center justify-center rounded text-white/80 transition hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent"
+                                title="Zoom In (+)"
+                                aria-label="Zoom In">
+                            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Reset Fit Button -->
+                    <button type="button"
+                            @click="resetZoom()"
+                            class="hidden sm:flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/20 hover:text-white"
+                            title="Reset tampilan foto">
+                        <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                        </svg>
+                        <span>Reset</span>
+                    </button>
+
+                    <!-- Close Lightbox Button -->
+                    <button type="button"
+                            @click="closeLightbox()"
+                            class="flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-red-600 hover:text-white"
+                            title="Tutup (Esc)"
+                            aria-label="Tutup">
+                        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Viewport Canvas (Draggable / Zoomable) -->
+            <div class="relative flex flex-1 items-center justify-center overflow-hidden p-4 sm:p-8"
+                 @wheel.prevent="handleWheel($event)"
+                 @mousedown="startDrag($event)"
+                 @mousemove="onDrag($event)"
+                 @mouseup="stopDrag()"
+                 @mouseleave="stopDrag()"
+                 @touchstart.passive="startDrag($event)"
+                 @touchmove="onDrag($event)"
+                 @touchend="stopDrag()"
+                 @click="handleBackdropClick($event)">
+
+                <img :src="lightboxImage"
+                     alt="{{ $product->name }}"
+                     draggable="false"
+                     @dragstart.prevent
+                     @dblclick="toggleZoom($event)"
+                     :style="`transform: translate(${panX}px, ${panY}px) scale(${scale}); transition: ${isDragging ? 'none' : 'transform 0.15s ease-out'}; transform-origin: center center;`"
+                     :class="scale > 1 ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-zoom-in'"
+                     class="max-h-[75vh] max-w-[85vw] object-contain drop-shadow-2xl select-none pointer-events-auto rounded">
+            </div>
+
+            <!-- Bottom Gallery Thumbnails & Usage Hint -->
+            <div class="relative z-10 flex flex-col items-center gap-3 border-t border-white/10 bg-black/50 px-4 py-3 sm:px-6">
+                @if ($product->images->count() > 1)
+                    <!-- Thumbnail Switcher -->
+                    <div class="flex items-center gap-2 overflow-x-auto py-1 max-w-full">
+                        @foreach ($product->images as $image)
+                            <button type="button"
+                                    @click="setLightboxImage('{{ $image->url }}')"
+                                    class="size-14 shrink-0 overflow-hidden rounded-lg border-2 transition bg-white/5"
+                                    :class="lightboxImage === '{{ $image->url }}' ? 'border-brand ring-2 ring-brand/60 scale-105' : 'border-white/20 opacity-60 hover:opacity-100 hover:border-white/60'">
+                                <img src="{{ $image->url }}" alt="{{ $image->alt ?? $product->name }}" class="size-full object-contain p-1" draggable="false">
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+
+                <p class="text-center text-xs text-white/60">
+                    Scroll mouse untuk <span class="text-white/90 font-medium">zoom</span> &bull; Klik & seret untuk <span class="text-white/90 font-medium">menggeser foto</span> &bull; Dobel klik untuk <span class="text-white/90 font-medium">zoom 2.5x</span>
+                </p>
+            </div>
+        </div>
     </div>
 @endsection
 
