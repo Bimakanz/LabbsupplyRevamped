@@ -33,7 +33,9 @@ class PostResource extends Resource
                 Forms\Components\Textarea::make('content')
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
-                    ->image(),
+                    ->image()
+                    ->imagePreviewHeight('260')
+                    ->columnSpanFull(),
                 Forms\Components\Toggle::make('is_published')
                     ->required(),
                 Forms\Components\DateTimePicker::make('published_at'),
@@ -65,10 +67,25 @@ class PostResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                Tables\Filters\TernaryFilter::make('is_published')->label('Terbit'),
+                Tables\Filters\Filter::make('published_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('from')->label('Dari tanggal'),
+                        Forms\Components\DatePicker::make('until')->label('Sampai tanggal'),
+                    ])
+                    ->query(fn ($query, array $data) => $query
+                        ->when($data['from'] ?? null, fn ($q, $date) => $q->whereDate('published_at', '>=', $date))
+                        ->when($data['until'] ?? null, fn ($q, $date) => $q->whereDate('published_at', '<=', $date))),
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

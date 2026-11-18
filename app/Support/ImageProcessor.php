@@ -84,8 +84,9 @@ class ImageProcessor
         $feather = max(0, min(10, $feather));
 
         $background = $this->detectBackgroundColor($image, $width, $height);
-        $hardLimit = $tolerance * 4.5;
-        $softLimit = $hardLimit + ($feather * 20);
+        $noise = $this->borderNoise($image, $width, $height, $background);
+        $hardLimit = max(24.0, min(150.0, ($tolerance * 2.2) + ($noise * 1.6)));
+        $softLimit = $hardLimit + max(6.0, $feather * 16.0);
 
         imagealphablending($image, false);
         imagesavealpha($image, true);
@@ -125,7 +126,7 @@ class ImageProcessor
 
             $this->setAlpha($image, $x, $y, 127);
 
-            foreach ([[$x - 1, $y], [$x + 1, $y], [$x, $y - 1], [$x, $y + 1]] as [$nx, $ny]) {
+            foreach ([[$x - 1, $y], [$x + 1, $y], [$x, $y - 1], [$x, $y + 1], [$x - 1, $y - 1], [$x + 1, $y - 1], [$x - 1, $y + 1], [$x + 1, $y + 1]] as [$nx, $ny]) {
                 if ($nx < 0 || $ny < 0 || $nx >= $width || $ny >= $height) {
                     continue;
                 }
@@ -143,7 +144,8 @@ class ImageProcessor
                     $queue->enqueue($neighbour);
                 } elseif ($feather > 0 && $distance <= $softLimit) {
                     $visited[$neighbour] = "\2";
-                    $this->setAlpha($image, $nx, $ny, 96);
+                    $ratio = ($distance - $hardLimit) / max(1.0, $softLimit - $hardLimit);
+                    $this->setAlpha($image, $nx, $ny, (int) round(127 * (1 - $ratio)));
                 }
             }
         }
@@ -184,6 +186,37 @@ class ImageProcessor
         imagedestroy($image);
 
         return $resized;
+    }
+
+    /**
+     * Estimate how noisy the border is so clean studio backgrounds can use a
+     * tighter tolerance, while gradients still get enough room to clear.
+     *
+     * @param  array{0: int, 1: int, 2: int}  $background
+     */
+    private function borderNoise(\GdImage $image, int $width, int $height, array $background): float
+    {
+        $distances = [];
+        $stepX = max(1, intdiv($width, 60));
+        $stepY = max(1, intdiv($height, 60));
+
+        for ($x = 0; $x < $width; $x += $stepX) {
+            $distances[] = $this->distanceTo($image, $x, 0, $background);
+            $distances[] = $this->distanceTo($image, $x, $height - 1, $background);
+        }
+
+        for ($y = 0; $y < $height; $y += $stepY) {
+            $distances[] = $this->distanceTo($image, 0, $y, $background);
+            $distances[] = $this->distanceTo($image, $width - 1, $y, $background);
+        }
+
+        if ($distances === []) {
+            return 0.0;
+        }
+
+        sort($distances);
+
+        return (float) $distances[(int) floor((count($distances) - 1) * 0.75)];
     }
 
     /**

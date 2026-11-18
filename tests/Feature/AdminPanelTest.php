@@ -32,6 +32,32 @@ class AdminPanelTest extends TestCase
         $this->actingAs($admin)->get('/admin/settings')->assertOk();
     }
 
+    public function test_admin_can_open_every_resource_table(): void
+    {
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        foreach ([
+            '/admin/banners',
+            '/admin/categories',
+            '/admin/contact-messages',
+            '/admin/downloads',
+            '/admin/orders',
+            '/admin/pages',
+            '/admin/posts',
+            '/admin/products',
+            '/admin/quote-requests',
+            '/admin/reviews',
+            '/admin/settings',
+            '/admin/tags',
+            '/admin/users',
+        ] as $path) {
+            $this->actingAs($admin)->get($path)->assertOk();
+        }
+    }
+
     public function test_customer_cannot_access_the_panel(): void
     {
         Role::create(['name' => 'customer', 'guard_name' => 'web']);

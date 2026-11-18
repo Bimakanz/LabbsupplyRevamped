@@ -8,17 +8,17 @@
             <div>
                 <p class="text-sm uppercase tracking-[0.2em] text-white/60">Lab Supply</p>
                 <h1 class="mt-4 font-display text-[32px] font-bold leading-tight sm:text-[44px]">
-                    Science needs reliable tools. We deliver them.
+                    {{ $banner?->title ?: 'Science needs reliable tools. We deliver them.' }}
                 </h1>
                 <p class="mt-4 max-w-lg text-sm leading-7 text-white/75">
-                    Alat dan bahan laboratorium pilihan untuk riset, diagnostik, dan pendidikan — dengan layanan purna jual yang responsif.
+                    {{ $banner?->subtitle ?: 'Alat dan bahan laboratorium pilihan untuk riset, diagnostik, dan pendidikan — dengan layanan purna jual yang responsif.' }}
                 </p>
                 <div class="mt-7 flex flex-wrap gap-3">
-                    <a href="{{ route('shop') }}" class="btn-primary">Shop Now</a>
+                    <a href="{{ $banner?->link ?: route('shop') }}" class="btn-primary">Shop Now</a>
                     <a href="{{ route('contact.index') }}" class="btn border border-white/30 text-white hover:bg-white/10">Hubungi Kami</a>
                 </div>
             </div>
-            <img src="{{ asset('theme/img/hero.webp') }}" alt="Laboratory" class="mx-auto max-h-[360px] w-full object-contain">
+            <img src="{{ $banner?->image ? media_url($banner->image) : asset('theme/img/hero.webp') }}" alt="Laboratory" class="mx-auto max-h-[360px] w-full object-contain">
         </div>
     </section>
 

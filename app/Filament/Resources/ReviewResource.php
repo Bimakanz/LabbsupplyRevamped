@@ -70,10 +70,25 @@ class ReviewResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                Tables\Filters\SelectFilter::make('product_id')
+                    ->label('Produk')
+                    ->relationship('product', 'name')
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('rating')
+                    ->label('Rating')
+                    ->options([1 => '1 bintang', 2 => '2 bintang', 3 => '3 bintang', 4 => '4 bintang', 5 => '5 bintang']),
+                Tables\Filters\TernaryFilter::make('is_approved')->label('Disetujui'),
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

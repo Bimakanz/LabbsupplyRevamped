@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
@@ -165,5 +166,26 @@ class StorefrontTest extends TestCase
         Setting::set('site_name', 'Lab Supply Test');
 
         $this->assertSame('Lab Supply Test', setting('site_name'));
+    }
+
+    public function test_active_home_banner_replaces_the_hero_content(): void
+    {
+        $this->makeProduct();
+
+        Banner::create([
+            'title' => 'Banner Hero Aktif',
+            'subtitle' => 'Subjudul dari admin banner',
+            'image' => 'theme/img/hero-bg.webp',
+            'link' => '/semua-produk',
+            'position' => 'home',
+            'sort_order' => 0,
+            'is_active' => true,
+        ]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Banner Hero Aktif')
+            ->assertSee('Subjudul dari admin banner')
+            ->assertSee('theme/img/hero-bg.webp', false);
     }
 }

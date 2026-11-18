@@ -5,7 +5,7 @@
     $inCompare = in_array($product->id, app(\App\Services\CompareService::class)->ids(), true);
 @endphp
 
-<article class="group relative flex h-full flex-col cursor-pointer" data-product-card="{{ $product->id }}" data-quick-view-url="{{ route('product.quick-view', $product) }}">
+<article class="group relative flex h-full flex-col cursor-pointer" data-product-card="{{ $product->id }}" data-product-url="{{ $product->url }}">
     <div class="relative overflow-hidden rounded-md bg-[#f4f5f6]">
         <a href="{{ $product->url }}" class="block">
             <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
@@ -15,31 +15,22 @@
 
         @unless ($hideActions)
             <div class="absolute right-3 top-3 flex flex-col gap-2.5 opacity-100 transition duration-300 lg:opacity-0 lg:group-hover:opacity-100">
-            <button type="button"
-                    class="grid size-10 place-items-center rounded-full bg-white text-ink shadow-md transition-all duration-200 hover:scale-110 hover:bg-brand hover:text-white {{ $inWishlist ? 'bg-brand text-white' : '' }}"
-                    data-wishlist-toggle="{{ $product->id }}" title="Wishlist" aria-label="Wishlist">
-                <svg class="size-5" viewBox="0 0 24 24" fill="{{ $inWishlist ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="1.8">
-                    <path d="M12 20.7s-8-4.7-8-10.2A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 3.5c0 5.5-8 10.2-8 10.2Z" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
+                <button type="button"
+                        class="grid size-10 place-items-center rounded-full bg-white text-ink shadow-md transition-all duration-200 hover:scale-110 hover:bg-brand hover:text-white {{ $inWishlist ? 'bg-brand text-white' : '' }}"
+                        data-wishlist-toggle="{{ $product->id }}" title="Wishlist" aria-label="Wishlist">
+                    <svg class="size-5" viewBox="0 0 24 24" fill="{{ $inWishlist ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 20.7s-8-4.7-8-10.2A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 3.5c0 5.5-8 10.2-8 10.2Z" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
 
-            <button type="button"
-                    class="hidden size-10 place-items-center rounded-full bg-white text-ink shadow-md transition-all duration-200 hover:scale-110 hover:bg-brand hover:text-white sm:grid {{ $inCompare ? 'bg-brand text-white' : '' }}"
-                    data-compare-toggle="{{ $product->id }}" title="Compare" aria-label="Compare">
-                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M4 7h10M4 7l3-3M4 7l3 3M20 17H10m10 0-3-3m3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-
-            <a href="{{ route('product.quick-view', $product) }}"
-               class="hidden size-10 place-items-center rounded-full bg-white text-ink shadow-md transition-all duration-200 hover:scale-110 hover:bg-brand hover:text-white sm:grid"
-               data-quick-view title="Quick View" aria-label="Quick View">
-                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </svg>
-            </a>
-        </div>
+                <button type="button"
+                        class="hidden size-10 place-items-center rounded-full bg-white text-ink shadow-md transition-all duration-200 hover:scale-110 hover:bg-brand hover:text-white sm:grid {{ $inCompare ? 'bg-brand text-white' : '' }}"
+                        data-compare-toggle="{{ $product->id }}" title="Compare" aria-label="Compare">
+                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M4 7h10M4 7l3-3M4 7l3 3M20 17H10m10 0-3-3m3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
         @endunless
 
         <button type="button" data-add-to-cart="{{ $product->id }}"

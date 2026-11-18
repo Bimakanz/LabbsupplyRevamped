@@ -143,12 +143,17 @@ class OrderResource extends Resource
                     ->query(fn ($query, array $data) => $query
                         ->when($data['from'] ?? null, fn ($q, $date) => $q->whereDate('created_at', '>=', $date))
                         ->when($data['until'] ?? null, fn ($q, $date) => $q->whereDate('created_at', '<=', $date))),
-            ])
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
                 Tables\Actions\Action::make('markPaid')
                     ->label('Tandai Lunas')
-                    ->icon('heroicon-o-check-circle')
+                    ->icon('heroicon-m-check-circle')
+                    ->iconButton()
+                    ->tooltip('Tandai lunas')
                     ->color('success')
                     ->visible(fn (Order $record): bool => ! $record->isPaid())
                     ->requiresConfirmation()

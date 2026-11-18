@@ -33,7 +33,9 @@ class CategoryResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
-                    ->image(),
+                    ->image()
+                    ->imagePreviewHeight('240')
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('sort_order')
                     ->required()
                     ->numeric()
@@ -77,10 +79,22 @@ class CategoryResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                Tables\Filters\SelectFilter::make('parent_id')
+                    ->label('Induk kategori')
+                    ->relationship('parent', 'name')
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\TernaryFilter::make('is_active')->label('Aktif'),
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

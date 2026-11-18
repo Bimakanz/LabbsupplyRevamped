@@ -5,6 +5,8 @@
 
     window.labsBrushEditorLoaded = true;
 
+    const originalSources = new WeakMap();
+
     const ICONS = {
         erase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>',
         restore: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>',
@@ -178,6 +180,10 @@
 
                 const result = await response.json();
 
+                if (! originalSources.has(editor)) {
+                    originalSources.set(editor, cloneCanvas(canvas));
+                }
+
                 editor.replace(result.image);
                 status.textContent = 'Background dihapus otomatis. Rapikan dengan kuas bila perlu.';
             } catch (error) {
@@ -201,11 +207,21 @@
                 mode: state.mode,
                 size: state.size,
                 container: overlay,
+                original: originalSources.get(editor) || null,
                 onSaved: (message) => {
                     status.textContent = message;
                 },
             });
         });
+    }
+
+    function cloneCanvas(source) {
+        const copy = document.createElement('canvas');
+        copy.width = source.width;
+        copy.height = source.height;
+        copy.getContext('2d').drawImage(source, 0, 0);
+
+        return copy;
     }
 
     function baseCanvas(editor) {
@@ -237,7 +253,7 @@
         return canvas;
     }
 
-    function openBrush({ editor, mode, size, onSaved, container }) {
+    function openBrush({ editor, mode, size, onSaved, container, original }) {
         const source = baseCanvas(editor);
 
         if (!source) {
@@ -249,6 +265,11 @@
         const scale = Math.min(1, 1400 / Math.max(source.width, source.height));
         const width = Math.max(1, Math.round(source.width * scale));
         const height = Math.max(1, Math.round(source.height * scale));
+        const originalSource = original || originalSources.get(editor) || null;
+
+        if (! originalSources.has(editor)) {
+            originalSources.set(editor, cloneCanvas(source));
+        }
 
         const state = { mode, size, drawing: false, last: null, history: [] };
 
@@ -293,6 +314,15 @@
         baseline.getContext('2d').drawImage(source, 0, 0, width, height);
         ctx.drawImage(baseline, 0, 0);
 
+        const restoreLayer = document.createElement('canvas');
+        restoreLayer.width = width;
+        restoreLayer.height = height;
+        restoreLayer.getContext('2d').drawImage(originalSource || source, 0, 0, width, height);
+
+        if (originalSource) {
+            status.textContent = 'Mode Restore BG memakai gambar asli sebelum background dihapus otomatis.';
+        }
+
         function pointAt(event) {
             const rect = canvas.getBoundingClientRect();
 
@@ -314,7 +344,7 @@
                 ctx.beginPath();
                 ctx.arc(x, y, radius, 0, Math.PI * 2);
                 ctx.clip();
-                ctx.drawImage(baseline, 0, 0);
+                ctx.drawImage(restoreLayer, 0, 0);
                 ctx.restore();
 
                 return;

@@ -1,10 +1,19 @@
 @php
+    $banner = $banner ?? null;
     $title = $title ?? 'New Products';
     $eyebrow = $eyebrow ?? 'Accurate, reliable, and built for everyday lab work.';
     $heading = $heading ?? 'Perform precise light analysis with consistent results — every time';
     $subheading = $subheading ?? 'The power of analysis in every beam of light';
     $image = $image ?? asset('theme/img/hero.webp');
+    $link = $link ?? route('shop');
     $center = $center ?? false;
+
+    if ($banner) {
+        $heading = $banner->title ?: $heading;
+        $subheading = $banner->subtitle ?: $subheading;
+        $image = $banner->image ? media_url($banner->image) : $image;
+        $link = $banner->link ?: $link;
+    }
 @endphp
 
 <section class="hero-texture relative overflow-hidden">
@@ -16,7 +25,7 @@
             </h1>
             <p class="mt-5 font-display text-lg text-ink/75 sm:text-xl">{{ $subheading }}</p>
             <div class="mt-8 flex flex-wrap items-center gap-3 {{ $center ? 'justify-center' : '' }}">
-                <a href="{{ route('shop') }}" class="btn-primary">Shop Now</a>
+                <a href="{{ $link }}" class="btn-primary">Shop Now</a>
                 <a href="{{ route('quote.index') }}" class="btn-outline">Request a Quote</a>
             </div>
         </div>

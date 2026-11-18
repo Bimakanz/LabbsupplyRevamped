@@ -24,9 +24,10 @@ class ReviewController extends Controller
             'email' => $data['email'],
             'rating' => (int) $data['rating'],
             'comment' => $data['comment'],
-            'is_approved' => false,
+            'is_approved' => true,
         ]);
 
-        return back()->with('success', 'Terima kasih! Review Anda sedang menunggu persetujuan admin.');
+        return redirect(url()->previous().'#reviews')
+            ->with('success', 'Terima kasih! Review Anda telah berhasil dikirim dan ditampilkan.');
     }
 }

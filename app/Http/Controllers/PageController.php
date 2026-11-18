@@ -11,6 +11,8 @@ class PageController extends Controller
     {
         $page = Page::query()->where('slug', $slug)->where('is_active', true)->firstOrFail();
 
-        return view('page.show', compact('page'));
+        $view = view()->exists("page.{$slug}") ? "page.{$slug}" : 'page.show';
+
+        return view($view, compact('page'));
     }
 }

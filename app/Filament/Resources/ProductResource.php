@@ -120,13 +120,15 @@ class ProductResource extends Resource
                                     ->visibility('public')
                                     ->imageEditor()
                                     ->imageEditorAspectRatios(['1:1'])
+                                    ->imagePreviewHeight('260')
+                                    ->columnSpanFull()
                                     ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file): string => app(ImageProcessor::class)
                                         ->storeAsWebp($file->getRealPath() ?: $file->getPathname())),
                                 Forms\Components\TextInput::make('alt')
                                     ->label('Alt text')
                                     ->maxLength(255),
                             ])
-                            ->columns(2),
+                            ->columns(1),
                     ]),
 
                 Forms\Components\Section::make('Lainnya')
@@ -203,15 +205,28 @@ class ProductResource extends Resource
                     ->relationship('category', 'name')
                     ->searchable()
                     ->preload(),
+                Tables\Filters\SelectFilter::make('stock_status')
+                    ->label('Status stok')
+                    ->options([
+                        'in_stock' => 'Tersedia',
+                        'out_of_stock' => 'Habis',
+                        'on_backorder' => 'Pre-order',
+                    ]),
                 Tables\Filters\TernaryFilter::make('is_active')->label('Aktif'),
                 Tables\Filters\TernaryFilter::make('is_featured')->label('Unggulan'),
                 Tables\Filters\Filter::make('low_stock')
                     ->label('Stok menipis (< 5)')
                     ->query(fn (Builder $query): Builder => $query->where('stock', '<', 5)),
-            ])
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
