@@ -53,6 +53,24 @@ class ShoppingFaqTest extends TestCase
             ->assertSee('"@type":"FAQPage"', false);
     }
 
+    public function test_faqs_page_uses_the_premium_layout_with_numbered_cms_questions(): void
+    {
+        $page = Page::create([
+            'slug' => 'faqs',
+            'title' => 'FAQs',
+            'template' => 'faqs',
+            'is_active' => true,
+            'content' => '<h2>Frequently asked questions</h2><p>Check this FAQ first.</p><h2>Ordering</h2>1. How do I reset my password?Lorem ipsum dolor sit amet.2. When will my order arrive?Lorem ipsum dolor sit amet.',
+        ]);
+
+        $this->get('/'.$page->slug)
+            ->assertOk()
+            ->assertSee('Cari jawaban')
+            ->assertSee('Ordering')
+            ->assertSee('How do I reset my password?')
+            ->assertSee('When will my order arrive?');
+    }
+
     public function test_pages_without_a_template_still_use_the_regular_page_layout(): void
     {
         $page = Page::create([
