@@ -103,10 +103,9 @@
 
         const productCard = event.target.closest('[data-product-card]');
         if (productCard) {
-            const url = productCard.dataset.quickViewUrl || productCard.querySelector('[data-quick-view]')?.getAttribute('href');
-            if (url) {
-                event.preventDefault();
-                openQuickView(url);
+            const url = productCard.dataset.productUrl || productCard.querySelector('h3 a')?.getAttribute('href');
+            if (url && !event.target.closest('a') && !event.target.closest('button')) {
+                window.location.href = url;
             }
         }
     });

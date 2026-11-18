@@ -28,6 +28,8 @@ class PageController extends Controller
             return view('page.'.$page->template, $data);
         }
 
-        return view('page.show', compact('page'));
+        $view = view()->exists("page.{$slug}") ? "page.{$slug}" : 'page.show';
+
+        return view($view, compact('page'));
     }
 }
