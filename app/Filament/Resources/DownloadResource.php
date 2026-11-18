@@ -62,10 +62,17 @@ class DownloadResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                Tables\Filters\TernaryFilter::make('is_active')->label('Aktif'),
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

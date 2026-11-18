@@ -38,7 +38,6 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('Konten')->icon('heroicon-o-document-text')->collapsible(),
                 NavigationGroup::make('Interaksi')->icon('heroicon-o-chat-bubble-left-right')->collapsible(),
                 NavigationGroup::make('Pengguna')->icon('heroicon-o-users')->collapsible(),
-                NavigationGroup::make('Pengaturan')->icon('heroicon-o-cog-6-tooth')->collapsible(),
             ])
             ->colors([
                 'primary' => Color::hex('#4981d4'),
@@ -55,13 +54,14 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 PanelsRenderHook::STYLES_AFTER,
-                fn (): string => '<style>input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield;appearance:textfield}.fi-fo-file-upload .filepond--file{background:transparent!important}.fi-fo-file-upload .filepond--file-info,.fi-fo-file-upload .filepond--file-status{display:none!important}.fi-sidebar-item-icon{display:none!important}</style>',
+                fn (): string => '<link rel="stylesheet" href="'.asset('css/filament-admin.css').'"><style>input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield;appearance:textfield}.fi-fo-file-upload .filepond--file{background:transparent!important}.fi-fo-file-upload .filepond--file-info,.fi-fo-file-upload .filepond--file-status{display:none!important}.fi-sidebar-item-icon{display:none!important}</style>',
             )
             ->renderHook(
                 PanelsRenderHook::SCRIPTS_AFTER,
                 fn (): string => '<script>window.labsBgRemoveUrl = '.json_encode(route('admin.image.remove-background'))
                     .'; window.labsCsrf = '.json_encode(csrf_token()).';</script>'
-                    .'<script src="'.asset('js/filament-bg-editor.js').'"></script>',
+                    .'<script src="'.asset('js/filament-bg-editor.js').'"></script>'
+                    .'<script src="'.asset('js/filament-admin.js').'" defer></script>',
             )
             ->middleware([
                 EncryptCookies::class,

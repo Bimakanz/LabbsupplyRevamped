@@ -59,15 +59,23 @@ class ContactMessageResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_read')->label('Sudah dibaca'),
-            ])
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
                 Tables\Actions\Action::make('markRead')
                     ->label('Tandai dibaca')
-                    ->icon('heroicon-o-check')
+                    ->icon('heroicon-m-check')
+                    ->iconButton()
+                    ->tooltip('Tandai dibaca')
                     ->visible(fn (ContactMessage $record): bool => ! $record->is_read)
                     ->action(fn (ContactMessage $record) => $record->update(['is_read' => true])),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

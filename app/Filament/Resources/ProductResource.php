@@ -63,8 +63,11 @@ class ProductResource extends Resource
                         Forms\Components\TextInput::make('price')
                             ->label('Harga')
                             ->required()
-                            ->numeric()
                             ->prefix('Rp')
+                            ->inputMode('numeric')
+                            ->formatStateUsing(fn ($state): ?string => filled($state) ? number_format((int) $state, 0, ',', '.') : null)
+                            ->dehydrateStateUsing(fn ($state): int => (int) preg_replace('/\D/', '', (string) $state))
+                            ->extraInputAttributes(['data-labs-money' => '1', 'autocomplete' => 'off'])
                             ->default(0),
                         Forms\Components\TextInput::make('stock')
                             ->label('Stok')
@@ -120,13 +123,15 @@ class ProductResource extends Resource
                                     ->visibility('public')
                                     ->imageEditor()
                                     ->imageEditorAspectRatios(['1:1'])
+                                    ->imagePreviewHeight('260')
+                                    ->columnSpanFull()
                                     ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file): string => app(ImageProcessor::class)
                                         ->storeAsWebp($file->getRealPath() ?: $file->getPathname())),
                                 Forms\Components\TextInput::make('alt')
                                     ->label('Alt text')
                                     ->maxLength(255),
                             ])
-                            ->columns(2),
+                            ->columns(1),
                     ]),
 
                 Forms\Components\Section::make('Lainnya')
@@ -202,16 +207,32 @@ class ProductResource extends Resource
                     ->label('Kategori')
                     ->relationship('category', 'name')
                     ->searchable()
-                    ->preload(),
-                Tables\Filters\TernaryFilter::make('is_active')->label('Aktif'),
-                Tables\Filters\TernaryFilter::make('is_featured')->label('Unggulan'),
-                Tables\Filters\Filter::make('low_stock')
-                    ->label('Stok menipis (< 5)')
-                    ->query(fn (Builder $query): Builder => $query->where('stock', '<', 5)),
-            ])
+                    ->preload()
+                    ->native(false),
+                Tables\Filters\SelectFilter::make('stock_status')
+                    ->label('Status stok')
+                    ->options([
+                        'in_stock' => 'Tersedia',
+                        'out_of_stock' => 'Habis',
+                        'on_backorder' => 'Pre-order',
+                    ])
+                    ->native(false),
+                Tables\Filters\TernaryFilter::make('is_active')
+                    ->label('Status')
+                    ->placeholder('Semua')
+                    ->trueLabel('Aktif')
+                    ->falseLabel('Nonaktif')
+                    ->native(false),
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

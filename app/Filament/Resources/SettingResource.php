@@ -18,6 +18,8 @@ class SettingResource extends Resource
 
     protected static ?string $navigationGroup = 'Pengaturan';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -46,10 +48,24 @@ class SettingResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                Tables\Filters\Filter::make('key')
+                    ->form([
+                        Forms\Components\TextInput::make('key')
+                            ->label('Cari key')
+                            ->placeholder('site_name'),
+                    ])
+                    ->query(fn ($query, array $data) => $query
+                        ->when($data['key'] ?? null, fn ($q, $key) => $q->where('key', 'like', "%{$key}%"))),
+            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

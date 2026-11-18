@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\View\View;
@@ -46,6 +47,12 @@ class HomeController extends Controller
 
         $categories = Category::query()->active()->ordered()->get();
 
-        return view('home.'.$variant, compact('newProducts', 'featured', 'bestSellers', 'categories', 'variant'));
+        $banner = Banner::query()
+            ->where('is_active', true)
+            ->where('position', 'home')
+            ->orderBy('sort_order')
+            ->first();
+
+        return view('home.'.$variant, compact('newProducts', 'featured', 'bestSellers', 'categories', 'variant', 'banner'));
     }
 }

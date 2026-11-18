@@ -3,22 +3,34 @@
 @section('title', 'Home 06 - '.setting('site_name', 'Lab Supply'))
 
 @section('content')
-    <section class="relative overflow-hidden bg-ink py-16 text-white lg:py-24">
-        <div class="container-x grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
-            <div>
+@php
+    $heroImage = $banner?->image ? media_url($banner->image) : null;
+@endphp
+
+    <section class="relative overflow-hidden bg-ink bg-cover bg-center py-16 text-white lg:py-24"
+             @if ($heroImage) style="background-image: url('{{ $heroImage }}');" @endif>
+        @if ($heroImage)
+            <div class="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/75 to-ink/35"></div>
+        @endif
+
+        <div class="container-x relative grid items-center gap-10 {{ $heroImage ? '' : 'lg:grid-cols-[1fr_1.1fr]' }}">
+            <div class="{{ $heroImage ? 'max-w-[640px]' : '' }}">
                 <p class="text-sm uppercase tracking-[0.2em] text-white/60">Lab Supply</p>
                 <h1 class="mt-4 font-display text-[32px] font-bold leading-tight sm:text-[44px]">
-                    Science needs reliable tools. We deliver them.
+                    {{ $banner?->title ?: 'Science needs reliable tools. We deliver them.' }}
                 </h1>
                 <p class="mt-4 max-w-lg text-sm leading-7 text-white/75">
-                    Alat dan bahan laboratorium pilihan untuk riset, diagnostik, dan pendidikan — dengan layanan purna jual yang responsif.
+                    {{ $banner?->subtitle ?: 'Alat dan bahan laboratorium pilihan untuk riset, diagnostik, dan pendidikan — dengan layanan purna jual yang responsif.' }}
                 </p>
                 <div class="mt-7 flex flex-wrap gap-3">
-                    <a href="{{ route('shop') }}" class="btn-primary">Shop Now</a>
+                    <a href="{{ $banner?->link ?: route('shop') }}" class="btn-primary">Shop Now</a>
                     <a href="{{ route('contact.index') }}" class="btn border border-white/30 text-white hover:bg-white/10">Hubungi Kami</a>
                 </div>
             </div>
-            <img src="{{ asset('theme/img/hero.webp') }}" alt="Laboratory" class="mx-auto max-h-[360px] w-full object-contain">
+
+            @unless ($heroImage)
+                <img src="{{ asset('theme/img/hero.webp') }}" alt="Laboratory" class="mx-auto max-h-[360px] w-full object-contain">
+            @endunless
         </div>
     </section>
 

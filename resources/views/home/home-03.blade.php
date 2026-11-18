@@ -3,22 +3,34 @@
 @section('title', 'Home 03 - '.setting('site_name', 'Lab Supply'))
 
 @section('content')
-    <section class="bg-slate-brand py-16 text-white lg:py-20">
-        <div class="container-x grid items-center gap-10 lg:grid-cols-2">
-            <div>
+@php
+    $heroImage = $banner?->image ? media_url($banner->image) : null;
+@endphp
+
+    <section class="relative overflow-hidden bg-slate-brand bg-cover bg-center py-16 text-white lg:py-20"
+             @if ($heroImage) style="background-image: url('{{ $heroImage }}');" @endif>
+        @if ($heroImage)
+            <div class="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/75 to-ink/35"></div>
+        @endif
+
+        <div class="container-x relative grid items-center gap-10 {{ $heroImage ? '' : 'lg:grid-cols-2' }}">
+            <div class="{{ $heroImage ? 'max-w-[640px]' : '' }}">
                 <p class="text-sm uppercase tracking-[0.18em] text-white/70">Laboratory Partner</p>
                 <h1 class="mt-4 font-display text-[32px] font-bold leading-tight sm:text-[42px]">
-                    Lab Supply for Your Laboratory
+                    {{ $banner?->title ?: 'Lab Supply for Your Laboratory' }}
                 </h1>
                 <p class="mt-4 max-w-lg text-sm leading-7 text-white/80">
-                    Menyediakan alat dan bahan laboratorium untuk institusi pendidikan, rumah sakit, dan industri di seluruh Indonesia.
+                    {{ $banner?->subtitle ?: 'Menyediakan alat dan bahan laboratorium untuk institusi pendidikan, rumah sakit, dan industri di seluruh Indonesia.' }}
                 </p>
                 <div class="mt-7 flex flex-wrap gap-3">
-                    <a href="{{ route('shop') }}" class="btn bg-white text-ink hover:bg-mist">Lihat Produk</a>
+                    <a href="{{ $banner?->link ?: route('shop') }}" class="btn bg-white text-ink hover:bg-mist">Lihat Produk</a>
                     <a href="{{ route('quote.index') }}" class="btn border border-white/40 text-white hover:bg-white/10">Minta Penawaran</a>
                 </div>
             </div>
-            <img src="{{ asset('theme/img/hero.webp') }}" alt="Laboratory" class="mx-auto max-h-[380px] w-full object-contain">
+
+            @unless ($heroImage)
+                <img src="{{ asset('theme/img/hero.webp') }}" alt="Laboratory" class="mx-auto max-h-[380px] w-full object-contain">
+            @endunless
         </div>
     </section>
 
