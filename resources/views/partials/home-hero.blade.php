@@ -12,8 +12,6 @@
     $productImage = $image;
 
     if ($banner) {
-        $heading = $banner->title ?: $heading;
-        $subheading = $banner->subtitle ?: $subheading;
         $link = $banner->link ?: $link;
     }
 @endphp

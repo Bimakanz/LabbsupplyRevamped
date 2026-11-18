@@ -16,11 +16,11 @@
         <div class="container-x relative grid items-center gap-10 lg:grid-cols-2">
             <div class="max-w-[640px]">
                 <p class="text-sm uppercase tracking-[0.18em] text-white/70">Laboratory Partner</p>
-                <h1 class="mt-4 font-display text-[32px] font-bold leading-tight sm:text-[42px]">
-                    {{ $banner?->title ?: 'Lab Supply for Your Laboratory' }}
+                <h1 class="mt-4 font-display text-[32px] font-bold uppercase leading-tight text-brand sm:text-[42px]">
+                    Perform precise light analysis with consistent results — every time
                 </h1>
                 <p class="mt-4 max-w-lg text-sm leading-7 text-white/80">
-                    {{ $banner?->subtitle ?: 'Menyediakan alat dan bahan laboratorium untuk institusi pendidikan, rumah sakit, dan industri di seluruh Indonesia.' }}
+                    The power of analysis in every beam of light
                 </p>
                 <div class="mt-7 flex flex-wrap gap-3">
                     <a href="{{ $banner?->link ?: route('shop') }}" class="btn bg-white text-ink hover:bg-mist">Lihat Produk</a>

@@ -168,7 +168,7 @@ class StorefrontTest extends TestCase
         $this->assertSame('Lab Supply Test', setting('site_name'));
     }
 
-    public function test_active_home_banner_replaces_the_hero_content(): void
+    public function test_active_home_banner_is_used_as_the_hero_background(): void
     {
         $this->makeProduct();
 
@@ -184,8 +184,10 @@ class StorefrontTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSee('Banner Hero Aktif')
-            ->assertSee('Subjudul dari admin banner')
-            ->assertSee('theme/img/hero-bg.webp', false);
+            ->assertSee('hero-bg.webp', false)
+            ->assertSee('Perform precise light analysis with consistent results', false)
+            ->assertSee('The power of analysis in every beam of light')
+            ->assertSee('theme/img/hero.webp', false)
+            ->assertDontSee('Banner Hero Aktif');
     }
 }
