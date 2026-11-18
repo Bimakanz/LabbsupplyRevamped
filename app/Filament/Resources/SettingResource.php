@@ -47,16 +47,6 @@ class SettingResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                Tables\Filters\Filter::make('key')
-                    ->form([
-                        Forms\Components\TextInput::make('key')
-                            ->label('Cari key')
-                            ->placeholder('site_name'),
-                    ])
-                    ->query(fn ($query, array $data) => $query
-                        ->when($data['key'] ?? null, fn ($q, $key) => $q->where('key', 'like', "%{$key}%"))),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-m-pencil-square')

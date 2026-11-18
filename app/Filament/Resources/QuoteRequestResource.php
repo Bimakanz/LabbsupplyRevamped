@@ -76,14 +76,6 @@ class QuoteRequestResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')->label('Tanggal')->dateTime('d M Y H:i')->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
-            ->filters([
-                Tables\Filters\SelectFilter::make('status')->options([
-                    'new' => 'Baru',
-                    'contacted' => 'Dihubungi',
-                    'quoted' => 'Diquote',
-                    'closed' => 'Selesai',
-                ]),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-m-pencil-square')

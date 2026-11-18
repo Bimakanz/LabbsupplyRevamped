@@ -57,16 +57,6 @@ class UserResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('roles')
-                    ->label('Role')
-                    ->relationship('roles', 'name')
-                    ->searchable()
-                    ->preload(),
-                Tables\Filters\TernaryFilter::make('email_verified_at')
-                    ->label('Email terverifikasi')
-                    ->nullable(),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-m-pencil-square')

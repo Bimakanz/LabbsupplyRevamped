@@ -71,16 +71,6 @@ class PageResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('template')
-                    ->label('Template')
-                    ->options(fn (): array => Page::query()
-                        ->whereNotNull('template')
-                        ->distinct()
-                        ->pluck('template', 'template')
-                        ->all()),
-                Tables\Filters\TernaryFilter::make('is_active')->label('Aktif'),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-m-pencil-square')

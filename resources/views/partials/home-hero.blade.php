@@ -1,70 +1,37 @@
 @php
-    $banner = $banner ?? null;
     $title = $title ?? 'New Products';
     $eyebrow = $eyebrow ?? 'Accurate, reliable, and built for everyday lab work.';
     $heading = $heading ?? 'Perform precise light analysis with consistent results — every time';
     $subheading = $subheading ?? 'The power of analysis in every beam of light';
     $image = $image ?? asset('theme/img/hero.webp');
     $link = $link ?? route('shop');
-    $center = $center ?? false;
 
-    $bannerImage = $banner?->image ? media_url($banner->image) : null;
-    $productImage = $image;
-
-    if ($banner) {
-        $link = $banner->link ?: $link;
-    }
+    $heroImage = asset('theme/img/hero-bg.webp');
 @endphp
 
-@if ($bannerImage)
-    {{-- The active banner is the hero background, the product photo sits on top. --}}
-    <section class="hero-banner relative overflow-hidden bg-cover bg-center"
-             style="background-image: url('{{ $bannerImage }}');">
-        <div class="hero-banner-scrim absolute inset-0"></div>
+<section class="hero-banner relative overflow-hidden bg-cover bg-center"
+         style="background-image: url('{{ $heroImage }}');">
+    <div class="hero-banner-scrim absolute inset-0"></div>
 
-        <div class="container-x relative z-10 grid items-center gap-8 py-12 lg:grid-cols-[1.05fr_1fr] lg:py-16">
-            <div class="max-w-[640px] text-center lg:text-left">
-                <p class="font-display text-lg text-ink/80 sm:text-xl">{{ $eyebrow }}</p>
-                <h1 class="mt-3 font-montserrat text-[30px] font-bold uppercase leading-[1.15] tracking-tight text-brand sm:text-[38px] lg:text-[42px]">
-                    {{ $heading }}
-                </h1>
-                <p class="mt-5 font-display text-lg text-ink/75 sm:text-xl">{{ $subheading }}</p>
-                <div class="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-                    <a href="{{ $link }}" class="btn-primary">Shop Now</a>
-                    <a href="{{ route('quote.index') }}" class="btn-outline">Request a Quote</a>
-                </div>
-            </div>
-
-            <div class="relative flex items-center justify-center">
-                <img src="{{ $productImage }}" alt="Laboratory instrument"
-                     class="relative z-10 h-auto w-full max-w-[520px] object-contain" loading="eager">
+    <div class="container-x relative z-10 grid items-center gap-8 py-12 lg:grid-cols-[1.05fr_1fr] lg:py-16">
+        <div class="max-w-[640px] text-center lg:text-left">
+            <p class="font-display text-lg text-ink/80 sm:text-xl">{{ $eyebrow }}</p>
+            <h1 class="mt-3 font-montserrat text-[30px] font-bold uppercase leading-[1.15] tracking-tight text-brand sm:text-[38px] lg:text-[42px]">
+                {{ $heading }}
+            </h1>
+            <p class="mt-5 font-display text-lg text-ink/75 sm:text-xl">{{ $subheading }}</p>
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+                <a href="{{ $link }}" class="btn-primary">Shop Now</a>
+                <a href="{{ route('quote.index') }}" class="btn-outline">Request a Quote</a>
             </div>
         </div>
-    </section>
-@else
-    <section class="hero-texture relative overflow-hidden">
-        <div class="container-x grid items-center gap-8 py-12 lg:grid-cols-[1.05fr_1fr] lg:py-0 {{ $center ? 'lg:grid-cols-1 lg:py-20' : '' }}">
-            <div class="relative z-10 py-4 lg:py-24 {{ $center ? 'mx-auto max-w-3xl text-center' : '' }}">
-                <p class="font-display text-lg text-ink/80 sm:text-xl">{{ $eyebrow }}</p>
-                <h1 class="mt-3 font-montserrat text-[30px] font-bold uppercase leading-[1.15] tracking-tight text-brand sm:text-[38px] lg:text-[42px] {{ $center ? 'mx-auto' : 'max-w-[640px]' }}">
-                    {{ $heading }}
-                </h1>
-                <p class="mt-5 font-display text-lg text-ink/75 sm:text-xl">{{ $subheading }}</p>
-                <div class="mt-8 flex flex-wrap items-center gap-3 {{ $center ? 'justify-center' : '' }}">
-                    <a href="{{ $link }}" class="btn-primary">Shop Now</a>
-                    <a href="{{ route('quote.index') }}" class="btn-outline">Request a Quote</a>
-                </div>
-            </div>
 
-            @unless ($center)
-                <div class="relative flex items-center justify-center">
-                    <img src="{{ $image }}" alt="Laboratory instrument"
-                         class="relative z-10 h-auto w-full max-w-[560px] object-contain mix-blend-multiply" loading="eager">
-                </div>
-            @endunless
+        <div class="relative flex items-center justify-center">
+            <img src="{{ $image }}" alt="Laboratory instrument"
+                 class="relative z-10 h-auto w-full max-w-[520px] object-contain" loading="eager">
         </div>
-    </section>
-@endif
+    </div>
+</section>
 
 <div class="border-b border-line bg-white">
     <div class="container-x grid grid-cols-2 divide-line py-5 sm:grid-cols-4 sm:divide-x">

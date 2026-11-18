@@ -202,28 +202,6 @@ class ProductResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('name')
-            ->filters([
-                Tables\Filters\SelectFilter::make('category_id')
-                    ->label('Kategori')
-                    ->relationship('category', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->native(false),
-                Tables\Filters\SelectFilter::make('stock_status')
-                    ->label('Status stok')
-                    ->options([
-                        'in_stock' => 'Tersedia',
-                        'out_of_stock' => 'Habis',
-                        'on_backorder' => 'Pre-order',
-                    ])
-                    ->native(false),
-                Tables\Filters\TernaryFilter::make('is_active')
-                    ->label('Status')
-                    ->placeholder('Semua')
-                    ->trueLabel('Aktif')
-                    ->falseLabel('Nonaktif')
-                    ->native(false),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-m-pencil-square')

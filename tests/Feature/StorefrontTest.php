@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
@@ -168,26 +167,16 @@ class StorefrontTest extends TestCase
         $this->assertSame('Lab Supply Test', setting('site_name'));
     }
 
-    public function test_active_home_banner_is_used_as_the_hero_background(): void
+    public function test_home_hero_uses_the_hardcoded_banner_background(): void
     {
         $this->makeProduct();
 
-        Banner::create([
-            'title' => 'Banner Hero Aktif',
-            'subtitle' => 'Subjudul dari admin banner',
-            'image' => 'theme/img/hero-bg.webp',
-            'link' => '/semua-produk',
-            'position' => 'home',
-            'sort_order' => 0,
-            'is_active' => true,
-        ]);
-
         $this->get('/')
             ->assertOk()
-            ->assertSee('hero-bg.webp', false)
+            ->assertSee('background-image: url', false)
+            ->assertSee('theme/img/hero-bg.webp', false)
             ->assertSee('Perform precise light analysis with consistent results', false)
             ->assertSee('The power of analysis in every beam of light')
-            ->assertSee('theme/img/hero.webp', false)
-            ->assertDontSee('Banner Hero Aktif');
+            ->assertSee('theme/img/hero.webp', false);
     }
 }

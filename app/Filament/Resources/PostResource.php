@@ -48,8 +48,6 @@ class PostResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
                 Tables\Columns\ImageColumn::make('image')
                     ->getStateUsing(fn (Post $record): ?string => media_url($record->image)),
                 Tables\Columns\IconColumn::make('is_published')
@@ -66,17 +64,6 @@ class PostResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                Tables\Filters\TernaryFilter::make('is_published')->label('Terbit'),
-                Tables\Filters\Filter::make('published_at')
-                    ->form([
-                        Forms\Components\DatePicker::make('from')->label('Dari tanggal'),
-                        Forms\Components\DatePicker::make('until')->label('Sampai tanggal'),
-                    ])
-                    ->query(fn ($query, array $data) => $query
-                        ->when($data['from'] ?? null, fn ($q, $date) => $q->whereDate('published_at', '>=', $date))
-                        ->when($data['until'] ?? null, fn ($q, $date) => $q->whereDate('published_at', '<=', $date))),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-m-pencil-square')

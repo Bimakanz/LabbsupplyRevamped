@@ -78,14 +78,6 @@ class CategoryResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('parent_id')
-                    ->label('Induk kategori')
-                    ->relationship('parent', 'name')
-                    ->searchable()
-                    ->preload(),
-                Tables\Filters\TernaryFilter::make('is_active')->label('Aktif'),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-m-pencil-square')

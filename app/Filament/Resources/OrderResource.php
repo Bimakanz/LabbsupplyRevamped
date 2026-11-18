@@ -124,26 +124,6 @@ class OrderResource extends Resource
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
-            ->filters([
-                Tables\Filters\SelectFilter::make('status')
-                    ->options([
-                        'pending' => 'Menunggu',
-                        'processing' => 'Diproses',
-                        'completed' => 'Selesai',
-                        'cancelled' => 'Dibatalkan',
-                    ]),
-                Tables\Filters\SelectFilter::make('payment_status')
-                    ->label('Pembayaran')
-                    ->options(['unpaid' => 'Belum Dibayar', 'paid' => 'Lunas', 'failed' => 'Gagal']),
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        Forms\Components\DatePicker::make('from')->label('Dari'),
-                        Forms\Components\DatePicker::make('until')->label('Sampai'),
-                    ])
-                    ->query(fn ($query, array $data) => $query
-                        ->when($data['from'] ?? null, fn ($q, $date) => $q->whereDate('created_at', '>=', $date))
-                        ->when($data['until'] ?? null, fn ($q, $date) => $q->whereDate('created_at', '<=', $date))),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-m-pencil-square')

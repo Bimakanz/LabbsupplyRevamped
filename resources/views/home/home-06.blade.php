@@ -4,14 +4,12 @@
 
 @section('content')
 @php
-    $heroImage = $banner?->image ? media_url($banner->image) : null;
+    $heroImage = asset('theme/img/hero-bg.webp');
 @endphp
 
     <section class="relative overflow-hidden bg-ink bg-cover bg-center py-16 text-white lg:py-24"
-             @if ($heroImage) style="background-image: url('{{ $heroImage }}');" @endif>
-        @if ($heroImage)
-            <div class="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/75 to-ink/35"></div>
-        @endif
+             style="background-image: url('{{ $heroImage }}');">
+        <div class="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/75 to-ink/35"></div>
 
         <div class="container-x relative grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
             <div class="max-w-[640px]">
@@ -23,7 +21,7 @@
                     The power of analysis in every beam of light
                 </p>
                 <div class="mt-7 flex flex-wrap gap-3">
-                    <a href="{{ $banner?->link ?: route('shop') }}" class="btn-primary">Shop Now</a>
+                    <a href="{{ route('shop') }}" class="btn-primary">Shop Now</a>
                     <a href="{{ route('contact.index') }}" class="btn border border-white/30 text-white hover:bg-white/10">Hubungi Kami</a>
                 </div>
             </div>

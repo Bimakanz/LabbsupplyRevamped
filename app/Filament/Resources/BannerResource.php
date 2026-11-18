@@ -18,6 +18,8 @@ class BannerResource extends Resource
 
     protected static ?string $navigationGroup = 'Konten';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -78,16 +80,6 @@ class BannerResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                Tables\Filters\TernaryFilter::make('is_active')->label('Aktif'),
-                Tables\Filters\SelectFilter::make('position')
-                    ->label('Posisi')
-                    ->options([
-                        'home' => 'Hero Beranda',
-                        'home-secondary' => 'Banner Beranda Lainnya',
-                        'sidebar' => 'Sidebar',
-                    ]),
-            ], layout: Tables\Enums\FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-m-pencil-square')
