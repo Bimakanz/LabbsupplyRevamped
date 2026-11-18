@@ -105,9 +105,62 @@
                     <button type="button" class="btn-outline" data-compare-toggle="{{ $product->id }}">Compare</button>
                 </div>
 
-                <div class="mt-5 flex flex-col gap-3">
-                    <a href="{{ route('quote.index') }}" class="btn-dark w-full sm:w-auto">Request Penawaran Harga</a>
-                    <p class="text-xs leading-6 text-muted">Butuh harga khusus untuk pembelian dalam jumlah besar? Ajukan permintaan penawaran dan tim kami akan menghubungi Anda.</p>
+                <div class="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                    <form action="{{ route('quote.add') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button type="submit" class="btn-dark w-full justify-center">
+                            <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polyline points="14 2 14 8 20 8" stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="16" y1="13" x2="8" y2="13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="16" y1="17" x2="8" y2="17" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polyline points="10 9 9 9 8 9" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Request Penawaran (RFQ)
+                        </button>
+                    </form>
+
+                    @php
+                        $waNumber = '628111174992';
+                        $waText = urlencode("Halo LabSupply, saya ingin diskusi & bertanya seputar produk: {$product->name} (SKU: {$product->sku})");
+                    @endphp
+                    <a href="https://wa.me/{{ $waNumber }}?text={{ $waText }}" target="_blank" rel="noopener"
+                       class="btn-outline w-full justify-center border-emerald-600 text-emerald-700 hover:bg-emerald-50">
+                        <svg class="size-4 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m.01 18.15c-1.5 0-2.97-.4-4.24-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a7.9 7.9 0 0 1-1.22-4.37c0-4.38 3.56-7.94 7.94-7.94 4.38 0 7.94 3.56 7.94 7.94 0 4.38-3.56 7.94-7.94 7.94"/>
+                        </svg>
+                        Diskusi Produk via WA
+                    </a>
+                </div>
+
+                <div class="mt-5 rounded-lg border border-line bg-mist/60 p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-ink">Layanan Khusus LabSupply:</p>
+                    <div class="mt-2.5 grid gap-2.5 sm:grid-cols-2 text-xs">
+                        <a href="{{ route('page.show', 'instalasi-training') }}" class="group flex items-start gap-2.5 rounded border border-line/70 bg-white p-2.5 transition hover:border-brand">
+                            <span class="grid size-7 shrink-0 place-items-center rounded bg-brand/10 text-brand">
+                                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <p class="font-medium text-ink group-hover:text-brand">Instalasi & Training</p>
+                                <p class="mt-0.5 text-muted leading-tight">Pemasangan on-site & pelatihan operasional alat.</p>
+                            </div>
+                        </a>
+                        <a href="{{ route('page.show', 'service') }}" class="group flex items-start gap-2.5 rounded border border-line/70 bg-white p-2.5 transition hover:border-brand">
+                            <span class="grid size-7 shrink-0 place-items-center rounded bg-brand/10 text-brand">
+                                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <p class="font-medium text-ink group-hover:text-brand">Service Alat Lab</p>
+                                <p class="mt-0.5 text-muted leading-tight">Pemeliharaan berkala, perbaikan, & kalibrasi alat.</p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
 
                 <dl class="mt-6 space-y-2 text-sm">
@@ -119,11 +172,21 @@
         </div>
 
         <div class="mt-14 border-t border-line pt-8">
-            <div class="flex gap-6 border-b border-line">
+            <div class="flex flex-wrap gap-4 sm:gap-6 border-b border-line">
                 <button type="button" @click="tab = 'description'"
                         class="border-b-2 pb-3 text-sm font-semibold transition"
                         :class="tab === 'description' ? 'border-brand text-brand' : 'border-transparent text-muted hover:text-ink'">
-                    Description
+                    Deskripsi & Spesifikasi
+                </button>
+                <button type="button" @click="tab = 'services'"
+                        class="border-b-2 pb-3 text-sm font-semibold transition"
+                        :class="tab === 'services' ? 'border-brand text-brand' : 'border-transparent text-muted hover:text-ink'">
+                    Instalasi & Service Alat
+                </button>
+                <button type="button" @click="tab = 'discussion'"
+                        class="border-b-2 pb-3 text-sm font-semibold transition"
+                        :class="tab === 'discussion' ? 'border-brand text-brand' : 'border-transparent text-muted hover:text-ink'">
+                    Diskusi Produk
                 </button>
                 <button type="button" @click="tab = 'reviews'"
                         class="border-b-2 pb-3 text-sm font-semibold transition"
@@ -135,6 +198,101 @@
             <div class="py-7">
                 <div x-show="tab === 'description'" class="prose-site max-w-4xl">
                     {!! $product->description ?: '<p>'.e($product->short_description ?: 'Deskripsi produk belum tersedia. Hubungi kami untuk informasi lebih lanjut.').'</p>' !!}
+                </div>
+
+                <div x-show="tab === 'services'" x-cloak class="max-w-4xl space-y-6">
+                    <div class="grid gap-6 sm:grid-cols-2">
+                        <div class="rounded-lg border border-line bg-mist/50 p-6">
+                            <div class="flex items-center gap-3">
+                                <span class="grid size-10 place-items-center rounded-lg bg-brand/10 text-brand">
+                                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                                    </svg>
+                                </span>
+                                <h3 class="font-display text-base font-semibold text-ink">Instalasi & Training</h3>
+                            </div>
+                            <p class="mt-3 text-sm leading-relaxed text-muted">
+                                LabSupply menyediakan layanan pemasangan instrumen on-site dan pelatihan pengoperasian bagi laboran, peneliti, atau teknisi lab oleh tim teknis bersertifikasi.
+                            </p>
+                            <ul class="mt-3 space-y-2 text-xs text-ink/80">
+                                <li class="flex items-center gap-2">
+                                    <svg class="size-3.5 text-emerald-600 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                    <span>Perakitan dan pengecekan fungsi awal (Commissioning)</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <svg class="size-3.5 text-emerald-600 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                    <span>Pelatihan standard operating procedure (SOP) alat</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <svg class="size-3.5 text-emerald-600 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                    <span>Dukungan dokumentasi instalasi lengkap</span>
+                                </li>
+                            </ul>
+                            <div class="mt-5">
+                                <a href="{{ route('page.show', 'instalasi-training') }}" class="btn-outline !py-2 !text-xs font-semibold">
+                                    Pelajari Syarat & Prosedur →
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="rounded-lg border border-line bg-mist/50 p-6">
+                            <div class="flex items-center gap-3">
+                                <span class="grid size-10 place-items-center rounded-lg bg-brand/10 text-brand">
+                                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="3"/>
+                                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                    </svg>
+                                </span>
+                                <h3 class="font-display text-base font-semibold text-ink">Service & Kalibrasi Alat Lab</h3>
+                            </div>
+                            <p class="mt-3 text-sm leading-relaxed text-muted">
+                                Menjaga akurasi dan masa pakai instrumen laboratorium Anda dengan perawatan berkala, penggantian suku cadang orisinal, serta kalibrasi terstandar.
+                            </p>
+                            <ul class="mt-3 space-y-2 text-xs text-ink/80">
+                                <li class="flex items-center gap-2">
+                                    <svg class="size-3.5 text-emerald-600 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                    <span>Preventive maintenance & pembersihan sensor</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <svg class="size-3.5 text-emerald-600 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                    <span>Perbaikan komponen & troubleshooting elektrikal</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <svg class="size-3.5 text-emerald-600 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                    <span>Verifikasi akurasi pengukuran instrumen</span>
+                                </li>
+                            </ul>
+                            <div class="mt-5">
+                                <a href="{{ route('page.show', 'service') }}" class="btn-outline !py-2 !text-xs font-semibold">
+                                    Informasi Layanan Service →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="tab === 'discussion'" x-cloak class="max-w-4xl space-y-6">
+                    <div class="rounded-lg border border-line bg-mist/40 p-6">
+                        <h3 class="font-display text-base font-semibold text-ink">Konsultasi & Diskusi Teknis Produk</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-muted">
+                            Punya pertanyaan seputar kompatibilitas reagen kimia, spesifikasi alat laboratorium, atau permintaan sertifikat analisis (CoA & MSDS) untuk <strong>{{ $product->name }}</strong>? Tim spesialis produk LabSupply siap membantu Anda.
+                        </p>
+                        <div class="mt-5 flex flex-wrap items-center gap-3">
+                            <a href="https://wa.me/{{ $waNumber }}?text={{ $waText }}" target="_blank" rel="noopener"
+                               class="btn-primary !bg-emerald-600 hover:!bg-emerald-700 !py-2.5">
+                                <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m.01 18.15c-1.5 0-2.97-.4-4.24-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a7.9 7.9 0 0 1-1.22-4.37c0-4.38 3.56-7.94 7.94-7.94 4.38 0 7.94 3.56 7.94 7.94 0 4.38-3.56 7.94-7.94 7.94"/>
+                                </svg>
+                                Diskusi via WhatsApp
+                            </a>
+                            <a href="{{ route('contact.index') }}" class="btn-outline !py-2.5">
+                                Kirim Pesan / Formulir Pertanyaan
+                            </a>
+                            <a href="{{ route('page.show', 'diskusi-produk') }}" class="text-xs font-semibold text-brand hover:underline">
+                                Baca Panduan Diskusi Produk →
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <div x-show="tab === 'reviews'" x-cloak>
