@@ -9,23 +9,23 @@
     $center = $center ?? false;
 
     $bannerImage = $banner?->image ? media_url($banner->image) : null;
+    $productImage = $image;
 
     if ($banner) {
         $heading = $banner->title ?: $heading;
         $subheading = $banner->subtitle ?: $subheading;
-        $image = $bannerImage ?: $image;
         $link = $banner->link ?: $link;
     }
 @endphp
 
 @if ($bannerImage)
-    {{-- An active banner is used as the hero background, not as a side image. --}}
+    {{-- The active banner is the hero background, the product photo sits on top. --}}
     <section class="hero-banner relative overflow-hidden bg-cover bg-center"
              style="background-image: url('{{ $bannerImage }}');">
         <div class="hero-banner-scrim absolute inset-0"></div>
 
-        <div class="container-x relative z-10 flex min-h-[420px] items-center py-14 lg:min-h-[520px]">
-            <div class="max-w-[660px] text-center lg:text-left">
+        <div class="container-x relative z-10 grid items-center gap-8 py-12 lg:grid-cols-[1.05fr_1fr] lg:py-16">
+            <div class="max-w-[640px] text-center lg:text-left">
                 <p class="font-display text-lg text-ink/80 sm:text-xl">{{ $eyebrow }}</p>
                 <h1 class="mt-3 font-montserrat text-[30px] font-bold uppercase leading-[1.15] tracking-tight text-brand sm:text-[38px] lg:text-[42px]">
                     {{ $heading }}
@@ -35,6 +35,11 @@
                     <a href="{{ $link }}" class="btn-primary">Shop Now</a>
                     <a href="{{ route('quote.index') }}" class="btn-outline">Request a Quote</a>
                 </div>
+            </div>
+
+            <div class="relative flex items-center justify-center">
+                <img src="{{ $productImage }}" alt="Laboratory instrument"
+                     class="relative z-10 h-auto w-full max-w-[520px] object-contain" loading="eager">
             </div>
         </div>
     </section>

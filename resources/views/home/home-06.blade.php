@@ -13,8 +13,8 @@
             <div class="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/75 to-ink/35"></div>
         @endif
 
-        <div class="container-x relative grid items-center gap-10 {{ $heroImage ? '' : 'lg:grid-cols-[1fr_1.1fr]' }}">
-            <div class="{{ $heroImage ? 'max-w-[640px]' : '' }}">
+        <div class="container-x relative grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
+            <div class="max-w-[640px]">
                 <p class="text-sm uppercase tracking-[0.2em] text-white/60">Lab Supply</p>
                 <h1 class="mt-4 font-display text-[32px] font-bold leading-tight sm:text-[44px]">
                     {{ $banner?->title ?: 'Science needs reliable tools. We deliver them.' }}
@@ -28,9 +28,7 @@
                 </div>
             </div>
 
-            @unless ($heroImage)
-                <img src="{{ asset('theme/img/hero.webp') }}" alt="Laboratory" class="mx-auto max-h-[360px] w-full object-contain">
-            @endunless
+            <img src="{{ asset('theme/img/hero.webp') }}" alt="Laboratory" class="mx-auto max-h-[360px] w-full object-contain">
         </div>
     </section>
 
