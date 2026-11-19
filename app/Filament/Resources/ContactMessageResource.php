@@ -57,17 +57,22 @@ class ContactMessageResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')->label('Tanggal')->dateTime('d M Y H:i')->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
-            ->filters([
-                Tables\Filters\TernaryFilter::make('is_read')->label('Sudah dibaca'),
-            ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
                 Tables\Actions\Action::make('markRead')
                     ->label('Tandai dibaca')
-                    ->icon('heroicon-o-check')
+                    ->icon('heroicon-m-check')
+                    ->iconButton()
+                    ->tooltip('Tandai dibaca')
                     ->visible(fn (ContactMessage $record): bool => ! $record->is_read)
                     ->action(fn (ContactMessage $record) => $record->update(['is_read' => true])),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

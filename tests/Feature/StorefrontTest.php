@@ -166,4 +166,17 @@ class StorefrontTest extends TestCase
 
         $this->assertSame('Lab Supply Test', setting('site_name'));
     }
+
+    public function test_home_hero_uses_the_hardcoded_banner_background(): void
+    {
+        $this->makeProduct();
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('background-image: url', false)
+            ->assertSee('theme/img/hero-bg.webp', false)
+            ->assertSee('Perform precise light analysis with consistent results', false)
+            ->assertSee('The power of analysis in every beam of light')
+            ->assertSee('theme/img/hero.webp', false);
+    }
 }

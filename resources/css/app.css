@@ -173,6 +173,27 @@
             linear-gradient(295deg, #ffffff 0%, #eef1f2 60%, #e6eaec 100%);
     }
 
+    .hero-banner-scrim {
+        background-image: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.94) 0%,
+            rgba(255, 255, 255, 0.86) 38%,
+            rgba(255, 255, 255, 0.35) 62%,
+            rgba(255, 255, 255, 0) 100%
+        );
+    }
+
+    @media (max-width: 1023px) {
+        .hero-banner-scrim {
+            background-image: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.92) 0%,
+                rgba(255, 255, 255, 0.8) 60%,
+                rgba(255, 255, 255, 0.55) 100%
+            );
+        }
+    }
+
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }

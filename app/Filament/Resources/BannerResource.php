@@ -18,6 +18,8 @@ class BannerResource extends Resource
 
     protected static ?string $navigationGroup = 'Konten';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -28,12 +30,18 @@ class BannerResource extends Resource
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
                     ->image()
-                    ->required(),
+                    ->required()
+                    ->imagePreviewHeight('280')
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('link')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('position')
+                Forms\Components\Select::make('position')
                     ->required()
-                    ->maxLength(255)
+                    ->options([
+                        'home' => 'Hero Beranda',
+                        'home-secondary' => 'Banner Beranda Lainnya',
+                        'sidebar' => 'Sidebar',
+                    ])
                     ->default('home'),
                 Forms\Components\TextInput::make('sort_order')
                     ->required()
@@ -72,11 +80,15 @@ class BannerResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('heroicon-m-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('heroicon-m-trash')
+                    ->iconButton()
+                    ->tooltip('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

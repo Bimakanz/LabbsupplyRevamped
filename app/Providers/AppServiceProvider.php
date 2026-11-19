@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Filament\Forms\Components\Select;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Select::configureUsing(function (Select $select): void {
+            $select->native(false);
+        });
+
+        SelectFilter::configureUsing(function (SelectFilter $filter): void {
+            $filter->native(false);
+        });
     }
 }
