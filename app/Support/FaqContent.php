@@ -76,6 +76,42 @@ class FaqContent
 
         foreach ($root->childNodes as $node) {
             if (! $node instanceof DOMElement) {
+                if ($node instanceof \DOMText && $currentGroup !== null) {
+                    $text = self::cleanText($node->textContent);
+                    $segments = preg_split('/(?<!\d)(?=\d{1,2}\.\s)/u', $text) ?: [];
+
+                    foreach ($segments as $segment) {
+                        if (! preg_match('/^\s*\d{1,2}\s*[\.\)]\s*(.+)$/us', trim($segment), $matches)) {
+                            continue;
+                        }
+
+                        $flush();
+
+                        $body = trim($matches[1]);
+                        $splits = [];
+
+                        if (($position = strpos($body, '?')) !== false) {
+                            $splits[] = $position + 1;
+                        }
+
+                        if (preg_match('/Lorem ipsum/i', $body, $lorem, PREG_OFFSET_CAPTURE)) {
+                            $splits[] = $lorem[0][1];
+                        }
+
+                        $split = $splits === [] ? null : min($splits);
+
+                        $question = $split !== null ? trim(substr($body, 0, $split)) : $body;
+                        $answer = $split !== null ? trim(substr($body, $split)) : '';
+
+                        if ($question !== '') {
+                            $currentQuestion = [
+                                'question' => $question,
+                                'answer' => htmlspecialchars($answer, ENT_QUOTES, 'UTF-8'),
+                            ];
+                        }
+                    }
+                }
+
                 continue;
             }
 
