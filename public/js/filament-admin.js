@@ -58,6 +58,8 @@
         wrap.appendChild(menu);
         wrap.appendChild(select);
 
+        select.closest('.fi-pagination-records-per-page-select')?.classList.add('labs-upgraded-select');
+
         const valueLabel = button.querySelector('.labs-select-value');
 
         const sync = () => {

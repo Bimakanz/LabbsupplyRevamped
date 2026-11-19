@@ -28,7 +28,8 @@ class PageResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('content')
+                Forms\Components\RichEditor::make('content')
+                    ->label('Konten')
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('template')
                     ->maxLength(255),
