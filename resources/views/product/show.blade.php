@@ -237,44 +237,48 @@
                         <button type="button" class="grid size-11 place-items-center text-lg text-muted hover:text-ink" @click="qty = Math.min(99, qty + 1)">+</button>
                     </div>
 
-                    <button type="button" class="btn-primary min-w-[190px] flex-1 sm:flex-none"
-                            data-product-add="{{ $product->id }}" :data-quantity="qty"
-                            @click="$dispatch('add-to-cart', { id: {{ $product->id }}, qty: qty })">
-                        Add to cart
-                    </button>
-
-                    <button type="button" class="btn-outline" data-wishlist-toggle="{{ $product->id }}">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-                            <path d="M12 20.7s-8-4.7-8-10.2A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 3.5c0 5.5-8 10.2-8 10.2Z" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Wishlist
-                    </button>
-
-                    <button type="button" class="btn-outline" data-compare-toggle="{{ $product->id }}">Compare</button>
-                </div>
-
-                <div class="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                    <form action="{{ route('quote.add') }}" method="POST">
+                    <form action="{{ route('quote.add') }}" method="POST" class="flex-1 sm:flex-none">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <button type="submit" class="btn-dark w-full justify-center">
-                            <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <button type="submit" class="btn-outline h-11 w-full sm:w-auto px-4 justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted hover:text-ink hover:border-ink">
+                            <svg class="size-4 shrink-0 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linecap="round" stroke-linejoin="round"/>
                                 <polyline points="14 2 14 8 20 8" stroke-linecap="round" stroke-linejoin="round"/>
                                 <line x1="16" y1="13" x2="8" y2="13" stroke-linecap="round" stroke-linejoin="round"/>
                                 <line x1="16" y1="17" x2="8" y2="17" stroke-linecap="round" stroke-linejoin="round"/>
                                 <polyline points="10 9 9 9 8 9" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            Request Penawaran (RFQ)
+                            Request RFQ
                         </button>
                     </form>
+
+                    <button type="button" class="btn-outline" data-wishlist-toggle="{{ $product->id }}" data-product-name="{{ $product->name }}">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                            <path d="M12 20.7s-8-4.7-8-10.2A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 3.5c0 5.5-8 10.2-8 10.2Z" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Wishlist
+                    </button>
+
+                    <button type="button" class="btn-outline" data-compare-toggle="{{ $product->id }}" data-product-name="{{ $product->name }}">Compare</button>
+                </div>
+
+                <div class="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                    <button type="button" class="btn-primary h-12 w-full justify-center gap-2.5 text-base font-bold shadow-md hover:shadow-lg transition-all"
+                            data-product-add="{{ $product->id }}" :data-quantity="qty" data-product-name="{{ $product->name }}"
+                            @click="$dispatch('add-to-cart', { id: {{ $product->id }}, qty: qty, name: @js($product->name) })">
+                        <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M3 6h18M16 10a4 4 0 0 1-8 0" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Add to Cart
+                    </button>
 
                     @php
                         $waNumber = '628111174992';
                         $waText = urlencode("Halo LabSupply, saya ingin diskusi & bertanya seputar produk: {$product->name} (SKU: {$product->sku})");
                     @endphp
                     <a href="https://wa.me/{{ $waNumber }}?text={{ $waText }}" target="_blank" rel="noopener"
-                       class="btn-outline w-full justify-center border-emerald-600 text-emerald-700 hover:bg-emerald-50">
+                       class="btn-outline h-12 w-full justify-center gap-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50">
                         <svg class="size-4 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m.01 18.15c-1.5 0-2.97-.4-4.24-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a7.9 7.9 0 0 1-1.22-4.37c0-4.38 3.56-7.94 7.94-7.94 4.38 0 7.94 3.56 7.94 7.94 0 4.38-3.56 7.94-7.94 7.94"/>
                         </svg>
@@ -666,7 +670,13 @@
                     quantity: event.detail.qty,
                 });
 
-                window.toast(data.message);
+                const productName = event.detail.name || data.product_name || @js($product->name);
+                if (window.showCenterNotice) {
+                    window.showCenterNotice({ title: productName, target: 'cart', action: 'add' });
+                } else {
+                    window.toast(data.message);
+                }
+
                 document.querySelectorAll('[data-cart-count]').forEach((el) => (el.textContent = data.count));
                 document.querySelectorAll('[data-cart-total]').forEach((el) => (el.textContent = data.total));
                 window.refreshCartCounters();

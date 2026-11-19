@@ -28,6 +28,8 @@
 <body class="min-h-screen bg-white">
     <div id="toast-stack" class="pointer-events-none fixed right-4 top-24 z-[80] flex w-[min(360px,calc(100vw-2rem))] flex-col gap-2"></div>
 
+    @include('partials.center-notify')
+
     @include('partials.header')
     @include('partials.cart-drawer')
     @include('partials.category-modal')

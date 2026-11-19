@@ -31,9 +31,13 @@ class CartController extends Controller
             'quantity' => ['nullable', 'integer', 'min:1', 'max:99'],
         ]);
 
+        $product = Product::find($data['product_id']);
         $cart->add((int) $data['product_id'], (int) ($data['quantity'] ?? 1));
 
-        return $this->cartResponse($request, $cart, 'Produk berhasil ditambahkan ke keranjang.');
+        $name = $product?->name ?? 'Produk';
+        $message = '"'.$name.'" has been added to your "Shopping Cart"!';
+
+        return $this->cartResponse($request, $cart, $message, $name);
     }
 
     public function update(Request $request, CartService $cart): JsonResponse|RedirectResponse
@@ -68,12 +72,13 @@ class CartController extends Controller
         ]);
     }
 
-    private function cartResponse(Request $request, CartService $cart, string $message): JsonResponse|RedirectResponse
+    private function cartResponse(Request $request, CartService $cart, string $message, ?string $productName = null): JsonResponse|RedirectResponse
     {
         if ($request->expectsJson()) {
             return response()->json([
                 'ok' => true,
                 'message' => $message,
+                'product_name' => $productName,
                 'count' => $cart->count(),
                 'subtotal' => rupiah($cart->subtotal()),
                 'total' => rupiah($cart->total()),

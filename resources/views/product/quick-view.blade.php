@@ -43,7 +43,11 @@
     window.addToCart = async function (id, qty) {
         try {
             const data = await window.postJson('{{ route('cart.add') }}', { product_id: id, quantity: qty });
-            window.toast(data.message);
+            if (window.showCenterNotice) {
+                window.showCenterNotice({ title: data.product_name || @js($product->name), target: 'cart', action: 'add' });
+            } else {
+                window.toast(data.message);
+            }
             document.querySelectorAll('[data-cart-count]').forEach((el) => (el.textContent = data.count));
             document.querySelectorAll('[data-cart-total]').forEach((el) => (el.textContent = data.total));
             window.refreshCartCounters();

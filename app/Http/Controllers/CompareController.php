@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Services\CompareService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -21,18 +22,29 @@ class CompareController extends Controller
     public function toggle(Request $request, CompareService $compare): JsonResponse|RedirectResponse
     {
         $data = $request->validate(['product_id' => ['required', 'integer', 'exists:products,id']]);
+        $product = Product::find($data['product_id']);
         $result = $compare->toggle((int) $data['product_id']);
+        $name = $product?->name ?? 'Produk';
+
+        if ($result['added']) {
+            $message = '"'.$name.'" has been added to your "Compare" list!';
+        } elseif (str_contains(strtolower($result['message']), 'maksimal')) {
+            $message = $result['message'];
+        } else {
+            $message = '"'.$name.'" has been removed from your "Compare" list!';
+        }
 
         if ($request->expectsJson()) {
             return response()->json([
                 'ok' => true,
                 'added' => $result['added'],
                 'count' => $compare->count(),
-                'message' => $result['message'],
+                'product_name' => $name,
+                'message' => $message,
             ]);
         }
 
-        return back()->with('success', $result['message']);
+        return back()->with('success', $message);
     }
 
     public function remove(Request $request, CompareService $compare): JsonResponse|RedirectResponse

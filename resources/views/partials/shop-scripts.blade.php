@@ -16,7 +16,13 @@
                     quantity: 1,
                 });
 
-                window.toast(data.message);
+                const productName = data.product_name || addButton.dataset.productName || addButton.closest('[data-product-card]')?.querySelector('h3 a')?.textContent?.trim() || 'Produk';
+                if (window.showCenterNotice) {
+                    window.showCenterNotice({ title: productName, target: 'cart', action: 'add' });
+                } else {
+                    window.toast(data.message);
+                }
+
                 document.querySelectorAll('[data-cart-count]').forEach((el) => (el.textContent = data.count));
                 document.querySelectorAll('[data-cart-total]').forEach((el) => (el.textContent = data.total));
                 window.refreshCartCounters();
@@ -36,11 +42,26 @@
             try {
                 const data = await window.postJson('{{ route('wishlist.toggle') }}', { product_id: id });
 
-                wishlistButton.classList.toggle('bg-brand', data.added);
-                wishlistButton.classList.toggle('text-white', data.added);
-                wishlistButton.querySelector('svg')?.setAttribute('fill', data.added ? 'currentColor' : 'none');
+                document.querySelectorAll(`[data-wishlist-toggle="${id}"]`).forEach((btn) => {
+                    if (data.added) {
+                        btn.classList.remove('bg-white', 'text-ink');
+                        btn.classList.add('bg-brand', 'text-white');
+                        btn.querySelector('svg')?.setAttribute('fill', 'currentColor');
+                    } else {
+                        btn.classList.remove('bg-brand', 'text-white');
+                        btn.classList.add('bg-white', 'text-ink');
+                        btn.querySelector('svg')?.setAttribute('fill', 'none');
+                    }
+                });
+
                 document.querySelectorAll('[data-wishlist-count]').forEach((el) => (el.textContent = data.count));
-                window.toast(data.message);
+
+                const productName = data.product_name || wishlistButton.dataset.productName || wishlistButton.closest('[data-product-card]')?.querySelector('h3 a')?.textContent?.trim() || 'Produk';
+                if (window.showCenterNotice) {
+                    window.showCenterNotice({ title: productName, target: 'wishlist', action: data.added ? 'add' : 'remove' });
+                } else {
+                    window.toast(data.message);
+                }
             } catch (error) {
                 window.toast(error.message, 'error');
             }
@@ -55,10 +76,31 @@
             try {
                 const data = await window.postJson('{{ route('compare.toggle') }}', { product_id: id });
 
-                compareButton.classList.toggle('bg-brand', data.added);
-                compareButton.classList.toggle('text-white', data.added);
+                document.querySelectorAll(`[data-compare-toggle="${id}"]`).forEach((btn) => {
+                    if (data.added) {
+                        btn.classList.remove('bg-white', 'text-ink');
+                        btn.classList.add('bg-brand', 'text-white');
+                    } else {
+                        btn.classList.remove('bg-brand', 'text-white');
+                        btn.classList.add('bg-white', 'text-ink');
+                    }
+                });
+
                 document.querySelectorAll('[data-compare-count]').forEach((el) => (el.textContent = data.count));
-                window.toast(data.message);
+
+                const productName = data.product_name || compareButton.dataset.productName || compareButton.closest('[data-product-card]')?.querySelector('h3 a')?.textContent?.trim() || 'Produk';
+                if (window.showCenterNotice) {
+                    const isLimit = data.message && data.message.toLowerCase().includes('maksimal');
+                    window.showCenterNotice({
+                        title: productName,
+                        target: 'compare',
+                        action: data.added ? 'add' : 'remove',
+                        customMessage: isLimit ? data.message : null
+                    });
+                } else {
+                    window.toast(data.message);
+                }
+
                 refreshCompareBar();
             } catch (error) {
                 window.toast(error.message, 'error');
@@ -74,10 +116,15 @@
                 await window.postJson('{{ route('compare.clear') }}', {});
                 document.querySelectorAll('[data-compare-toggle]').forEach((el) => {
                     el.classList.remove('bg-brand', 'text-white');
+                    el.classList.add('bg-white', 'text-ink');
                 });
                 document.querySelectorAll('[data-compare-count]').forEach((el) => (el.textContent = '0'));
                 refreshCompareBar();
-                window.toast('Perbandingan dikosongkan.');
+                if (window.showCenterNotice) {
+                    window.showCenterNotice({ customMessage: 'Perbandingan dikosongkan.' });
+                } else {
+                    window.toast('Perbandingan dikosongkan.');
+                }
             } catch (error) {
                 window.toast(error.message, 'error');
             }

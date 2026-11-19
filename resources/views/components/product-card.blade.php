@@ -16,24 +16,24 @@
         @unless ($hideActions)
             <div class="absolute right-3 top-3 flex flex-col gap-2.5 opacity-100 transition duration-300 lg:opacity-0 lg:group-hover:opacity-100">
                 <button type="button"
-                        class="grid size-10 place-items-center rounded-full bg-white text-ink shadow-md transition-all duration-200 hover:scale-110 hover:bg-brand hover:text-white {{ $inWishlist ? 'bg-brand text-white' : '' }}"
-                        data-wishlist-toggle="{{ $product->id }}" title="Wishlist" aria-label="Wishlist">
-                    <svg class="size-5" viewBox="0 0 24 24" fill="{{ $inWishlist ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="1.8">
+                        class="grid size-10 place-items-center rounded-full shadow-md transition-all duration-200 hover:scale-110 {{ $inWishlist ? 'bg-brand text-white' : 'bg-white text-ink hover:bg-brand hover:text-white' }}"
+                        data-wishlist-toggle="{{ $product->id }}" data-product-name="{{ $product->name }}" title="Wishlist" aria-label="Wishlist">
+                    <svg class="size-5 pointer-events-none" viewBox="0 0 24 24" fill="{{ $inWishlist ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="1.8">
                         <path d="M12 20.7s-8-4.7-8-10.2A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 3.5c0 5.5-8 10.2-8 10.2Z" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
 
                 <button type="button"
-                        class="hidden size-10 place-items-center rounded-full bg-white text-ink shadow-md transition-all duration-200 hover:scale-110 hover:bg-brand hover:text-white sm:grid {{ $inCompare ? 'bg-brand text-white' : '' }}"
-                        data-compare-toggle="{{ $product->id }}" title="Compare" aria-label="Compare">
-                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        class="hidden size-10 place-items-center rounded-full shadow-md transition-all duration-200 hover:scale-110 sm:grid {{ $inCompare ? 'bg-brand text-white' : 'bg-white text-ink hover:bg-brand hover:text-white' }}"
+                        data-compare-toggle="{{ $product->id }}" data-product-name="{{ $product->name }}" title="Compare" aria-label="Compare">
+                    <svg class="size-5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                         <path d="M4 7h10M4 7l3-3M4 7l3 3M20 17H10m10 0-3-3m3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
             </div>
         @endunless
 
-        <button type="button" data-add-to-cart="{{ $product->id }}"
+        <button type="button" data-add-to-cart="{{ $product->id }}" data-product-name="{{ $product->name }}"
                 class="absolute inset-x-0 bottom-0 translate-y-full bg-ink/95 py-2.5 text-center text-[13px] font-semibold text-white transition duration-300 hover:bg-brand group-hover:translate-y-0">
             Add to cart
         </button>

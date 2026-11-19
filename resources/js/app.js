@@ -30,6 +30,76 @@ window.toast = function (message, type = 'success') {
     }, 3200);
 };
 
+let notifyCenterTimer = null;
+let notifyCenterFadeTimer = null;
+
+window.showCenterNotice = function (options = {}) {
+    let container = document.getElementById('center-notify-stack');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'center-notify-stack';
+        container.className = 'pointer-events-none fixed inset-0 z-[120] flex items-center justify-center p-4';
+        document.body.appendChild(container);
+    }
+
+    if (notifyCenterTimer) clearTimeout(notifyCenterTimer);
+    if (notifyCenterFadeTimer) clearTimeout(notifyCenterFadeTimer);
+
+    const title = typeof options === 'string' ? options : (options.title || options.productName || 'Produk');
+    const target = options.target || 'wishlist';
+    const action = options.action || 'add';
+
+    const safeTitle = String(title || '').replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+    let messageHtml = '';
+
+    if (options.customMessage) {
+        messageHtml = options.customMessage;
+    } else if (target === 'cart') {
+        messageHtml = `&ldquo;<span class="font-semibold text-slate-900">${safeTitle}</span>&rdquo; has been added to your &ldquo;<span class="font-semibold text-slate-900">Shopping Cart</span>&rdquo;!`;
+    } else if (target === 'compare') {
+        if (action === 'remove') {
+            messageHtml = `&ldquo;<span class="font-semibold text-slate-900">${safeTitle}</span>&rdquo; has been removed from your &ldquo;<span class="font-semibold text-slate-900">Compare</span>&rdquo; list!`;
+        } else {
+            messageHtml = `&ldquo;<span class="font-semibold text-slate-900">${safeTitle}</span>&rdquo; has been added to your &ldquo;<span class="font-semibold text-slate-900">Compare</span>&rdquo; list!`;
+        }
+    } else {
+        if (action === 'remove') {
+            messageHtml = `&ldquo;<span class="font-semibold text-slate-900">${safeTitle}</span>&rdquo; has been removed from your &ldquo;<span class="font-semibold text-slate-900">My wishlist</span>&rdquo; list!`;
+        } else {
+            messageHtml = `&ldquo;<span class="font-semibold text-slate-900">${safeTitle}</span>&rdquo; has been added to your &ldquo;<span class="font-semibold text-slate-900">My wishlist</span>&rdquo; list!`;
+        }
+    }
+
+    container.innerHTML = `
+        <div id="center-notify-card"
+             class="pointer-events-auto transform rounded-2xl border border-slate-200/90 bg-white/95 px-8 py-5 text-center shadow-[0_22px_60px_-15px_rgba(0,0,0,0.22)] backdrop-blur-md transition-all duration-300 ease-out max-w-[min(480px,calc(100vw-2rem))] opacity-0 scale-95 translate-y-1">
+            <p class="text-sm sm:text-[15px] font-normal leading-relaxed text-slate-800">
+                ${messageHtml}
+            </p>
+        </div>
+    `;
+
+    const card = document.getElementById('center-notify-card');
+    if (!card) return;
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            card.classList.remove('opacity-0', 'scale-95', 'translate-y-1');
+            card.classList.add('opacity-100', 'scale-100', 'translate-y-0');
+        });
+    });
+
+    notifyCenterFadeTimer = setTimeout(() => {
+        card.style.transition = 'opacity 500ms ease-out, transform 500ms ease-out';
+        card.classList.remove('opacity-100', 'scale-100', 'translate-y-0');
+        card.classList.add('opacity-0', 'scale-95', '-translate-y-1');
+
+        notifyCenterTimer = setTimeout(() => {
+            container.innerHTML = '';
+        }, 520);
+    }, 2400);
+};
+
 window.postJson = async function (url, payload) {
     const response = await fetch(url, {
         method: 'POST',
