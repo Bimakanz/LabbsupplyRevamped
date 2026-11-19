@@ -255,9 +255,26 @@
     outline: none;
 }
 
-.fi-pagination label.fi-pagination-records-per-page-select {
+.fi-pagination .labs-upgraded-select {
     display: inline-flex;
     align-items: center;
+}
+
+/* The custom dropdown replaces the native control, so drop its wrapper chrome
+   and the duplicate "Per page" prefix to avoid overlapping borders. */
+.fi-pagination .labs-upgraded-select .fi-input-wrp {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.fi-pagination .labs-upgraded-select .fi-input-wrp-prefix {
+    display: none;
+}
+
+.fi-pagination .labs-upgraded-select .labs-select {
+    margin: 0;
 }
 
 /* Custom dropdown used for the records-per-page select. */
