@@ -15,7 +15,7 @@ class PageController extends Controller
         if ($page->template && view()->exists('page.'.$page->template)) {
             $data = compact('page');
 
-            if ($page->template === 'faq') {
+            if (in_array($page->template, ['faq', 'faqs'], true)) {
                 $faq = FaqContent::parse($page->content);
 
                 if ($faq['groups'] === []) {
