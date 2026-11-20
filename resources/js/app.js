@@ -11,14 +11,13 @@ window.toast = function (message, type = 'success') {
 
     const el = document.createElement('div');
     el.className =
-        'pointer-events-auto flex items-start gap-3 rounded-lg border px-4 py-3 text-sm shadow-lg transition duration-300 ' +
+        'pointer-events-auto flex items-center gap-3 rounded-2xl border px-6 py-3.5 text-sm shadow-[0_15px_35px_-5px_rgba(0,0,0,0.12)] backdrop-blur-md transition duration-300 ' +
         (type === 'error'
             ? 'border-red-200 bg-red-50 text-red-700'
-            : 'border-emerald-200 bg-emerald-50 text-emerald-700');
+            : 'border-slate-200/90 bg-white/95 text-slate-800');
     el.innerHTML =
-        '<span class="mt-0.5">' +
-        (type === 'error' ? '&#9888;' : '&#10003;') +
-        '</span><span>' +
+        (type === 'error' ? '<span class="font-bold text-red-600">&#9888;</span>' : '') +
+        '<span class="font-normal leading-relaxed">' +
         message +
         '</span>';
 
