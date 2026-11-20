@@ -1,4 +1,4 @@
-@if (session('success') || session('error') || session('status'))
+@if (! request()->routeIs('payment.success') && (session('success') || session('error') || session('status')))
     <div class="pointer-events-none fixed inset-x-0 top-24 z-[70] flex justify-center px-4">
         @php
             $type = session('error') ? 'error' : 'success';

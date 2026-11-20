@@ -39,7 +39,7 @@ class PaymentController extends Controller
             $this->decreaseStock($order);
         }
 
-        return redirect()->route('payment.success', $order)->with('success', 'Pembayaran berhasil!');
+        return redirect()->route('payment.success', $order);
     }
 
     public function success(Order $order): View
